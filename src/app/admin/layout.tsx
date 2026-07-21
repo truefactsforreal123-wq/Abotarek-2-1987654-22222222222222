@@ -1,7 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 import AdminSidebar from "./AdminSidebar";
 import { UnseenOrdersProvider } from "./UnseenOrdersProvider";
 
@@ -10,24 +9,13 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const headersList = await headers();
-  const pathname = headersList.get("x-invoke-path") ?? headersList.get("x-pathname") ?? "";
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!pathname.includes("/admin/login")) {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      redirect("/admin/login");
-    }
-  }
-
-  const isLoginPage = pathname.includes("/admin/login");
-
-  if (isLoginPage) {
-    return <>{children}</>;
+  if (!user) {
+    redirect("/login");
   }
 
   const [soundSetting, tables] = await Promise.all([
