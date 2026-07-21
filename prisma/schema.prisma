@@ -1,0 +1,146 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Branch {
+  id           Int               @id @default(autoincrement())
+  number       String            @unique
+  nameAr       String
+  nameEn       String
+  addressAr    String
+  addressEn    String
+  phone        String
+  whatsapp     String
+  mapsUrl      String
+  hoursAr      String            @default("")
+  hoursEn      String            @default("")
+  landmarksAr  Json              @default("[]")
+  landmarksEn  Json              @default("[]")
+  tables       RestaurantTable[]
+  reviews      Review[]
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+}
+
+model Category {
+  id        Int        @id @default(autoincrement())
+  nameAr    String
+  nameEn    String
+  order     Int        @default(0)
+  image     String
+  items     MenuItem[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model MenuItem {
+  id         Int         @id @default(autoincrement())
+  categoryId Int
+  category   Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  nameAr     String
+  nameEn     String
+  descAr     String
+  descEn     String
+  price      Int?
+  sizes      Json?
+  image      String
+  badge      String?
+  available  Boolean     @default(true)
+  orderItems OrderItem[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+
+  @@index([categoryId])
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  branchId  Int?
+  branch    Branch?  @relation(fields: [branchId], references: [id])
+  name      String
+  rating    Int
+  text      String
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Admin {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         String   @default("editor")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model RestaurantTable {
+  id            String    @id @default(uuid()) @db.Uuid
+  branchId      Int
+  tableNumber   Int
+  qrToken       String    @unique
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt     DateTime  @updatedAt @db.Timestamptz(6)
+
+  branch   Branch      @relation(fields: [branchId], references: [id])
+  orders   Order[]
+
+  @@unique([branchId, tableNumber])
+  @@index([branchId])
+}
+
+model Order {
+  id          String    @id @default(uuid()) @db.Uuid
+  tableId     String    @db.Uuid
+  status      String    @default("draft")
+  createdAt   DateTime  @default(now()) @db.Timestamptz(6)
+  submittedAt DateTime? @db.Timestamptz(6)
+  servedAt    DateTime? @db.Timestamptz(6)
+
+  table RestaurantTable @relation(fields: [tableId], references: [id])
+  items OrderItem[]
+
+  @@index([tableId])
+  @@index([status])
+}
+
+model OrderItem {
+  id           String  @id @default(uuid()) @db.Uuid
+  orderId      String  @db.Uuid
+  menuItemId   Int
+  quantity     Int
+  selectedSize Json?
+  notes        String?
+  presets      Json?
+  priceAtOrder Decimal @db.Decimal(10, 2)
+
+  order    Order    @relation(fields: [orderId], references: [id])
+  menuItem MenuItem @relation(fields: [menuItemId], references: [id])
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  @@index([orderId])
+}
+
+model SystemSetting {
+  id    String @id @default(uuid()) @db.Uuid
+  key   String @unique
+  value Json
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+}
+
+model SiteContent {
+  id        String @id @default(uuid()) @db.Uuid
+  key       String @unique
+  value     Json
+
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @db.Timestamptz(6)
+}

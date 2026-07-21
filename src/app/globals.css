@@ -1,0 +1,317 @@
+@import "tailwindcss" source(none);
+
+/* restrict scanning to our source (avoid junk classes from .md files) */
+@source "../**/*.{ts,tsx}";
+
+/* ============================================================
+   ABO TAREK — design system
+   Brand: royal blue badge + red/gold border (from official logo)
+   Vibe: downtown-Cairo neon legend, steam, 1950s cinema poster
+   ============================================================ */
+
+@theme {
+  /* palette */
+  --color-night: #090c22; /* deepest background */
+  --color-navy: #10153a; /* section background */
+  --color-navy-2: #171d4d; /* raised surface */
+  --color-royal: #2b2e7a; /* logo blue */
+  --color-royal-light: #3d41a5;
+  --color-ember: #e53222; /* logo red */
+  --color-ember-dark: #a91f14;
+  --color-gold: #f6b21b; /* logo gold */
+  --color-gold-soft: #fdcf5c;
+  --color-cream: #fff6e3;
+  --color-cream-dim: #d9cdb0;
+
+  /* admin palette (AboTarek 2 design) */
+  --color-ink-950: #0A1124;
+  --color-ink-900: #0F1B2D;
+  --color-ink-800: #152236;
+  --color-ink-700: #1E2F47;
+  --color-cobalt-50: #EBF0FA;
+  --color-cobalt-500: #4A6CF7;
+  --color-cobalt-600: #3B5DE7;
+  --color-cobalt-700: #2D4BC0;
+  --color-tomato-50: #FEF2F0;
+  --color-tomato-100: #FDDDD8;
+  --color-tomato-500: #E53222;
+  --color-tomato-600: #D42B1C;
+  --color-tomato-700: #B42315;
+  --color-saffron-50: #FEF8EC;
+  --color-saffron-100: #FDF0D0;
+  --color-saffron-400: #F0B429;
+  --color-saffron-500: #D69E2E;
+  --color-saffron-600: #B7791F;
+  --color-saffron-700: #975A16;
+  --color-paper: #FBF5EC;
+  --color-paper-warm: #F5EDE0;
+
+  /* signature animations */
+  --animate-marquee: marquee 36s linear infinite;
+  --animate-steam: steam 6s ease-in-out infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-slow: float 10s ease-in-out infinite;
+  --animate-glow: glow 5s ease-in-out infinite;
+  --animate-bounce-soft: bounce-soft 2s ease-in-out infinite;
+  --animate-spin-slower: spin 24s linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes steam {
+    0% {
+      opacity: 0;
+      transform: translateY(0) scale(0.7);
+    }
+    25% {
+      opacity: 0.55;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-130px) scale(1.7);
+    }
+  }
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(var(--float-rot, 0deg));
+    }
+    50% {
+      transform: translateY(-14px) rotate(var(--float-rot, 0deg));
+    }
+  }
+  @keyframes glow {
+    0%,
+    100% {
+      opacity: 0.5;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.9;
+      transform: scale(1.08);
+    }
+  }
+  @keyframes bounce-soft {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(8px);
+    }
+  }
+}
+
+@theme inline {
+  --font-sans: var(--font-cairo), ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-night);
+  color: var(--color-cream);
+  overflow-x: hidden;
+  min-width: 280px;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a {
+  touch-action: manipulation;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: var(--color-night);
+}
+
+/* slim gold scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-night);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(var(--color-royal), var(--color-gold));
+  border-radius: 999px;
+  border: 2px solid var(--color-night);
+}
+
+/* ---------- signature utilities ---------- */
+
+/* shimmering gold headline text */
+.text-gold-grad {
+  background: linear-gradient(115deg, #f6b21b 10%, #ffe9a8 45%, #e8960f 80%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gold-shine 5s linear infinite;
+}
+@keyframes gold-shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* frosted navy card */
+.glass {
+  background: color-mix(in srgb, var(--color-cream) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-cream) 12%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* red stamp chip (الأصل) */
+.stamp {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-ember) 35%, transparent),
+    0 10px 30px -10px color-mix(in srgb, var(--color-ember) 80%, transparent);
+}
+
+/* glow ring on hover for food cards */
+.card-lift {
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.5s;
+}
+.card-lift:hover {
+  transform: translateY(-8px);
+  box-shadow:
+    0 24px 60px -20px color-mix(in srgb, var(--color-gold) 35%, transparent),
+    0 8px 30px -12px rgb(0 0 0 / 0.7);
+  border-color: color-mix(in srgb, var(--color-gold) 55%, transparent);
+}
+
+/* subtle Cairo-ledger texture for section backgrounds */
+.texture-grid {
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--color-cream) 4%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-cream) 4%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 44px 44px;
+}
+
+/* marquee edge fade */
+.marquee-mask {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+}
+
+/* steam particle (radial blob — no filter:blur so it stays on GPU) */
+.steam-dot {
+  background: radial-gradient(
+    closest-side,
+    rgb(255 246 227 / 0.5),
+    transparent
+  );
+  border-radius: 9999px;
+  will-change: transform, opacity;
+}
+
+/* ---------- accessibility (mandatory) ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (pointer: coarse) {
+  /* trim heavy ambience on touch devices */
+  .steam-dot {
+    display: none;
+  }
+}
+
+@media (max-width: 359px) {
+  .glass {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+}
+
+/* ---------- admin UI utilities ---------- */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-tomato-600);
+  color: var(--color-paper);
+  font-weight: 800;
+  font-size: 0.875rem;
+  transition: all 0.15s;
+  box-shadow: 0 3px 0 0 var(--color-tomato-700);
+  cursor: pointer;
+  border: none;
+}
+.btn-primary:hover {
+  background-color: var(--color-tomato-500);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 0 0 var(--color-tomato-700);
+}
+.btn-primary:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 0 0 var(--color-tomato-700);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--color-ink-700);
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: all 0.15s;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.btn-ghost:hover {
+  background-color: var(--color-paper-warm);
+  border-color: var(--color-ink-900);
+  color: var(--color-ink-950);
+}
