@@ -38,14 +38,8 @@ export function SettingsClient({
 }: {
   settings: Record<string, unknown>;
 }) {
-  const [ttl, setTtl] = useState(
-    typeof settings.order_ttl === "number" ? settings.order_ttl : 4,
-  );
   const [liveTracking, setLiveTracking] = useState(
-    typeof settings.live_tracking === "boolean" ? settings.live_tracking : true,
-  );
-  const [soundEnabled, setSoundEnabled] = useState(
-    typeof settings.sound_enabled === "boolean" ? settings.sound_enabled : true,
+    settings.customer_live_tracking === true || settings.customer_live_tracking === "true",
   );
   const [saved, setSaved] = useState(false);
   const [pending, startTransition] = useTransition();
@@ -53,14 +47,12 @@ export function SettingsClient({
   const handleSave = useCallback(() => {
     startTransition(async () => {
       await Promise.all([
-        updateSystemSetting("order_ttl", ttl),
-        updateSystemSetting("live_tracking", liveTracking),
-        updateSystemSetting("sound_enabled", soundEnabled),
+        updateSystemSetting("customer_live_tracking", liveTracking),
       ]);
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
     });
-  }, [ttl, liveTracking, soundEnabled]);
+  }, [liveTracking]);
 
   return (
     <div className="space-y-8 max-w-2xl">
@@ -70,30 +62,6 @@ export function SettingsClient({
       </div>
 
       <div className="space-y-6">
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-          <div className="flex items-center justify-between mb-1">
-            <label className="text-sm font-bold text-gray-900">
-              Order TTL (hours)
-            </label>
-            <span className="text-sm font-bold text-red-600">{ttl}h</span>
-          </div>
-          <p className="text-xs text-gray-500 mb-4">
-            Auto-expire orders after this duration
-          </p>
-          <input
-            type="range"
-            min={1}
-            max={72}
-            value={ttl}
-            onChange={(e) => setTtl(Number(e.target.value))}
-            className="w-full accent-red-600"
-          />
-          <div className="flex justify-between text-xs text-gray-400 mt-1">
-            <span>1h</span>
-            <span>72h</span>
-          </div>
-        </div>
-
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
@@ -105,18 +73,6 @@ export function SettingsClient({
               </p>
             </div>
             <Toggle checked={liveTracking} onChange={setLiveTracking} />
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-bold text-gray-900">Sound Alerts</p>
-              <p className="text-xs text-gray-500">
-                Play sound for new incoming orders
-              </p>
-            </div>
-            <Toggle checked={soundEnabled} onChange={setSoundEnabled} />
           </div>
         </div>
       </div>
