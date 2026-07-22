@@ -309,7 +309,7 @@ a {
   padding: 0.625rem 1.25rem;
   border-radius: 0.5rem;
   background: transparent;
-  color: var(--color-ink-700);
+  color: var(--color-paper);
   font-weight: 700;
   font-size: 0.875rem;
   transition: all 0.15s;
@@ -317,9 +317,9 @@ a {
   border: 1px solid transparent;
 }
 .btn-ghost:hover {
-  background-color: var(--color-paper-warm);
-  border-color: var(--color-ink-900);
-  color: var(--color-ink-950);
+  background-color: var(--color-ink-800);
+  border-color: var(--color-ink-700);
+  color: var(--color-paper);
 }
 
 /* brand CTA button for ordering page */

@@ -79,8 +79,8 @@ export function TablesManagerClient({
   const [newTableNum, setNewTableNum] = useState("");
   const [batchStart, setBatchStart] = useState("");
   const [batchCount, setBatchCount] = useState("5");
-  const [qrModal, setQrModal] = useState<TableWithBranch | null>(null);
   const [acting, setActing] = useState<string | null>(null);
+  const [qrModal, setQrModal] = useState<TableWithBranch | null>(null);
 
   const filtered = tables.filter((t) => t.branchId === selectedBranch);
   const activeBranch = branches.find((b) => b.id === selectedBranch);
@@ -406,7 +406,7 @@ export function TablesManagerClient({
       )}
 
       {/* Table Cards Grid */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
         {filtered.map((table) => {
           const url = qrUrl(origin, table.tableNumber, table.qrToken);
           return (
@@ -441,29 +441,6 @@ export function TablesManagerClient({
                 {table.branch.nameEn}
               </p>
 
-              {/* Mini QR + Token */}
-              <div className="mt-4 flex items-center gap-3">
-                {origin && (
-                  <div className="rounded-lg bg-paper p-2">
-                    <QRCodeSVG
-                      value={url}
-                      size={48}
-                      level="M"
-                      bgColor="#FBF5EC"
-                      fgColor="#0A1124"
-                    />
-                  </div>
-                )}
-                <div className="min-w-0 flex-1">
-                  <p className="text-[10px] font-bold text-paper/25 uppercase tracking-wider">
-                    Token
-                  </p>
-                  <p className="truncate font-mono text-xs text-paper/50">
-                    {table.qrToken}
-                  </p>
-                </div>
-              </div>
-
               {/* Actions */}
               <div className="mt-4 flex flex-wrap gap-2">
                 <button
@@ -475,17 +452,18 @@ export function TablesManagerClient({
                 </button>
 
                 <button
-                  onClick={() => handlePrintQR(table)}
-                  className="flex items-center gap-1.5 rounded-lg bg-ink-800 px-3 py-2 text-xs font-bold text-paper/50 hover:bg-ink-700 hover:text-paper transition-colors"
-                >
-                  <Printer size={14} />
-                </button>
-
-                <button
                   onClick={() => handleDownloadPDF(table)}
                   className="flex items-center gap-1.5 rounded-lg bg-ink-800 px-3 py-2 text-xs font-bold text-paper/50 hover:bg-ink-700 hover:text-paper transition-colors"
                 >
                   <Download size={14} />
+                  PDF
+                </button>
+
+                <button
+                  onClick={() => handlePrintQR(table)}
+                  className="flex items-center gap-1.5 rounded-lg bg-ink-800 px-3 py-2 text-xs font-bold text-paper/50 hover:bg-ink-700 hover:text-paper transition-colors"
+                >
+                  <Printer size={14} />
                 </button>
 
                 <button
@@ -575,9 +553,7 @@ export function TablesManagerClient({
 
             <div className="mt-6 flex gap-3 justify-center">
               <button
-                onClick={() => {
-                  handlePrintQR(qrModal);
-                }}
+                onClick={() => handlePrintQR(qrModal)}
                 className="btn-primary text-sm"
               >
                 <Printer size={14} />
@@ -600,6 +576,7 @@ export function TablesManagerClient({
           </div>
         </div>
       )}
+
     </div>
   );
 }
