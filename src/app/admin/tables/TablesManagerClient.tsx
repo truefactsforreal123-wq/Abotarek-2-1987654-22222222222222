@@ -212,11 +212,7 @@ export function TablesManagerClient({
     doc.setFontSize(14);
     doc.setFont("helvetica", "normal");
     doc.text(activeBranch?.nameEn ?? "", pageW / 2, 62, { align: "center" });
-    const qrImg = await fetch(qrDataUrl).then((r) => r.arrayBuffer());
-    const qrBase64 = btoa(
-      new Uint8Array(qrImg).reduce((d, b) => d + String.fromCharCode(b), ""),
-    );
-    doc.addImage(`image/png;base64,${qrBase64}`, "PNG", (pageW - 70) / 2, 75, 70, 70);
+    doc.addImage(qrDataUrl, "PNG", (pageW - 70) / 2, 75, 70, 70);
     doc.save(`Table-${table.tableNumber}-QR.pdf`);
   }
 
@@ -235,11 +231,7 @@ export function TablesManagerClient({
       doc.setFontSize(14);
       doc.setFont("helvetica", "normal");
       doc.text(activeBranch?.nameEn ?? "", pageW / 2, 62, { align: "center" });
-      const qrImg = await fetch(qrDataUrl).then((r) => r.arrayBuffer());
-      const qrBase64 = btoa(
-        new Uint8Array(qrImg).reduce((d, b) => d + String.fromCharCode(b), ""),
-      );
-      doc.addImage(`image/png;base64,${qrBase64}`, "PNG", (pageW - 70) / 2, 75, 70, 70);
+      doc.addImage(qrDataUrl, "PNG", (pageW - 70) / 2, 75, 70, 70);
     }
     doc.save(`${activeBranch?.nameEn ?? "Tables"}-QR-Codes.pdf`);
   }
