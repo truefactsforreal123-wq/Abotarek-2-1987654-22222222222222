@@ -19,6 +19,7 @@
   --color-ember: #e53222; /* logo red */
   --color-ember-dark: #a91f14;
   --color-gold: #f6b21b; /* logo gold */
+  --color-gold-400: #e8a317;
   --color-gold-soft: #fdcf5c;
   --color-cream: #fff6e3;
   --color-cream-dim: #d9cdb0;
@@ -43,6 +44,11 @@
   --color-saffron-500: #D69E2E;
   --color-saffron-600: #B7791F;
   --color-saffron-700: #975A16;
+  --color-brand-500: #c45a2d;
+  --color-brand-100: #fde8dd;
+  --color-brand-300: #e88a5c;
+  --color-brand-600: #a84820;
+  --color-brand-700: #8c3a18;
   --color-paper: #FBF5EC;
   --color-paper-warm: #F5EDE0;
 
@@ -314,4 +320,45 @@ a {
   background-color: var(--color-paper-warm);
   border-color: var(--color-ink-900);
   color: var(--color-ink-950);
+}
+
+/* brand CTA button for ordering page */
+.brand-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 9999px;
+  background-color: var(--color-brand-500);
+  color: var(--color-paper);
+  font-weight: 800;
+  font-size: 0.875rem;
+  transition: all 0.15s;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 8px 0 rgb(0 0 0 / 0.15);
+}
+.brand-button:hover {
+  background-color: var(--color-brand-600);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px 0 rgb(0 0 0 / 0.2);
+}
+.brand-button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px 0 rgb(0 0 0 / 0.15);
+}
+.brand-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* hide scrollbar but keep scroll functionality */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }

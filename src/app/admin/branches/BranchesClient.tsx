@@ -29,7 +29,7 @@ const emptyForm = {
 };
 
 const fieldClass =
-  "w-full rounded-lg border border-ink-700 bg-ink-900 px-3 py-2 text-sm text-paper placeholder:text-paper/30 focus:border-cobalt-500 focus:outline-none";
+  "w-full rounded-lg border border-ink-700 bg-ink-800 px-3 py-2 text-sm text-paper placeholder:text-paper/30 focus:border-cobalt-500 focus:outline-none";
 
 export function BranchesClient({ branches }: { branches: Branch[] }) {
   const [editing, setEditing] = useState<Branch | null>(null);

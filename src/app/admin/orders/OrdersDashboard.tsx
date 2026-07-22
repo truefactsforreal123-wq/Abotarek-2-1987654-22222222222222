@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -89,7 +89,9 @@ export function OrdersDashboard({
   const todayStr = new Date().toISOString().slice(0, 10);
   const [summaryDate, setSummaryDate] = useState(todayStr);
   const [summaryData, setSummaryData] = useState<DaySummary | null>(null);
-  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [lastFetchedDate, setLastFetchedDate] = useState<string | null>(null);
+  const summaryFetchId = useRef(0);
+  const summaryLoading = tab === "summary" && lastFetchedDate !== summaryDate;
 
   const itemName = useCallback((item: OrderItem) => item.menuItem.nameEn, []);
 
@@ -189,25 +191,18 @@ export function OrdersDashboard({
   // Fetch summary data
   useEffect(() => {
     if (tab !== "summary") return;
-    let cancelled = false;
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSummaryLoading(true);
+    const fetchId = ++summaryFetchId.current;
     fetch(`/api/orders/summary?date=${summaryDate}`, {
       credentials: "same-origin",
     })
       .then((r) => r.json())
       .then((data) => {
-        if (!cancelled) {
+        if (fetchId === summaryFetchId.current) {
           setSummaryData(data);
-          setSummaryLoading(false);
+          setLastFetchedDate(summaryDate);
         }
       })
-      .catch(() => {
-        if (!cancelled) setSummaryLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
+      .catch(() => {});
   }, [tab, summaryDate]);
 
   async function handleAction(orderId: string, action: () => Promise<void>) {
@@ -584,7 +579,7 @@ export function OrdersDashboard({
               value={summaryDate}
               max={todayStr}
               onChange={(e) => setSummaryDate(e.target.value)}
-              className="rounded-lg border border-ink-700 bg-ink-900 px-4 py-2.5 text-base font-bold text-paper"
+              className="rounded-lg border border-ink-700 bg-ink-800 px-4 py-2.5 text-base font-bold text-paper"
             />
             {summaryDate === todayStr ? (
               <span className="rounded-lg bg-green-500/15 px-3 py-1.5 text-sm font-bold text-green-400">

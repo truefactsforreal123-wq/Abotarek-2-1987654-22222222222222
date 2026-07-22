@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
+import QRCode from "qrcode";
+import jsPDF from "jspdf";
 import {
   Plus,
   Power,
@@ -12,6 +14,7 @@ import {
   Printer,
   Eye,
   Hash,
+  Download,
 } from "lucide-react";
 import {
   createTable,
@@ -198,6 +201,49 @@ export function TablesManagerClient({
     printWindow.document.close();
   }
 
+  async function handleDownloadPDF(table: TableWithBranch) {
+    const url = qrUrl(origin, table.tableNumber, table.qrToken);
+    const qrDataUrl = await QRCode.toDataURL(url, { width: 300, margin: 2 });
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const pageW = doc.internal.pageSize.getWidth();
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(28);
+    doc.text(`Table ${table.tableNumber}`, pageW / 2, 50, { align: "center" });
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "normal");
+    doc.text(activeBranch?.nameEn ?? "", pageW / 2, 62, { align: "center" });
+    const qrImg = await fetch(qrDataUrl).then((r) => r.arrayBuffer());
+    const qrBase64 = btoa(
+      new Uint8Array(qrImg).reduce((d, b) => d + String.fromCharCode(b), ""),
+    );
+    doc.addImage(`image/png;base64,${qrBase64}`, "PNG", (pageW - 70) / 2, 75, 70, 70);
+    doc.save(`Table-${table.tableNumber}-QR.pdf`);
+  }
+
+  async function handleDownloadAllPDF() {
+    if (filtered.length === 0) return;
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const pageW = doc.internal.pageSize.getWidth();
+    for (let i = 0; i < filtered.length; i++) {
+      if (i > 0) doc.addPage();
+      const table = filtered[i];
+      const url = qrUrl(origin, table.tableNumber, table.qrToken);
+      const qrDataUrl = await QRCode.toDataURL(url, { width: 300, margin: 2 });
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(28);
+      doc.text(`Table ${table.tableNumber}`, pageW / 2, 50, { align: "center" });
+      doc.setFontSize(14);
+      doc.setFont("helvetica", "normal");
+      doc.text(activeBranch?.nameEn ?? "", pageW / 2, 62, { align: "center" });
+      const qrImg = await fetch(qrDataUrl).then((r) => r.arrayBuffer());
+      const qrBase64 = btoa(
+        new Uint8Array(qrImg).reduce((d, b) => d + String.fromCharCode(b), ""),
+      );
+      doc.addImage(`image/png;base64,${qrBase64}`, "PNG", (pageW - 70) / 2, 75, 70, 70);
+    }
+    doc.save(`${activeBranch?.nameEn ?? "Tables"}-QR-Codes.pdf`);
+  }
+
   if (branches.length === 0) {
     return (
       <div className="rounded-xl border border-dashed border-ink-700 bg-ink-900 p-12 text-center">
@@ -243,6 +289,15 @@ export function TablesManagerClient({
         >
           <Printer size={14} />
           Print All
+        </button>
+
+        <button
+          onClick={handleDownloadAllPDF}
+          disabled={filtered.length === 0}
+          className="btn-ghost text-xs disabled:opacity-30"
+        >
+          <Download size={14} />
+          Download PDF
         </button>
 
         <button
@@ -305,7 +360,7 @@ export function TablesManagerClient({
                 value={newTableNum}
                 onChange={(e) => setNewTableNum(e.target.value)}
                 placeholder={String(nextTableNum)}
-                className="w-28 rounded-lg border border-ink-700 bg-ink-950 px-4 py-2.5 text-base font-bold text-paper placeholder:text-paper/25"
+                className="w-28 rounded-lg border border-ink-700 bg-ink-800 px-4 py-2.5 text-base font-bold text-paper placeholder:text-paper/25"
               />
               <button onClick={handleCreate} className="btn-primary text-sm">
                 Create
@@ -323,7 +378,7 @@ export function TablesManagerClient({
                   value={batchStart}
                   onChange={(e) => setBatchStart(e.target.value)}
                   placeholder={String(nextTableNum)}
-                  className="w-24 rounded-lg border border-ink-700 bg-ink-950 px-4 py-2.5 text-base font-bold text-paper placeholder:text-paper/25"
+                  className="w-24 rounded-lg border border-ink-700 bg-ink-800 px-4 py-2.5 text-base font-bold text-paper placeholder:text-paper/25"
                 />
               </div>
               <div>
@@ -336,7 +391,7 @@ export function TablesManagerClient({
                   max={500}
                   value={batchCount}
                   onChange={(e) => setBatchCount(e.target.value)}
-                  className="w-24 rounded-lg border border-ink-700 bg-ink-950 px-4 py-2.5 text-base font-bold text-paper placeholder:text-paper/25"
+                  className="w-24 rounded-lg border border-ink-700 bg-ink-800 px-4 py-2.5 text-base font-bold text-paper placeholder:text-paper/25"
                 />
               </div>
               <button
@@ -424,6 +479,13 @@ export function TablesManagerClient({
                   className="flex items-center gap-1.5 rounded-lg bg-ink-800 px-3 py-2 text-xs font-bold text-paper/50 hover:bg-ink-700 hover:text-paper transition-colors"
                 >
                   <Printer size={14} />
+                </button>
+
+                <button
+                  onClick={() => handleDownloadPDF(table)}
+                  className="flex items-center gap-1.5 rounded-lg bg-ink-800 px-3 py-2 text-xs font-bold text-paper/50 hover:bg-ink-700 hover:text-paper transition-colors"
+                >
+                  <Download size={14} />
                 </button>
 
                 <button
@@ -520,6 +582,13 @@ export function TablesManagerClient({
               >
                 <Printer size={14} />
                 Print
+              </button>
+              <button
+                onClick={() => handleDownloadPDF(qrModal)}
+                className="btn-primary text-sm"
+              >
+                <Download size={14} />
+                Download
               </button>
               <button
                 onClick={() => setQrModal(null)}
