@@ -60,22 +60,20 @@ export default function AdminLoginPage() {
         </div>
       </div>
 
-      {/* Right — login form */}
-      <div className="flex flex-1 items-center justify-center bg-ink-900 px-6">
+      {/* Right — login form with founder image background */}
+      <div className="relative flex flex-1 items-center justify-center px-6 overflow-hidden">
+        <img
+          src="/images/founder.jpg"
+          alt="Abo Tarek Founder"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-ink-950/70" />
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="w-full max-w-md"
+          className="relative z-10 w-full max-w-md"
         >
-          {/* Mobile brand header */}
-          <div className="mb-8 flex items-center gap-3 lg:hidden">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-tomato-600 text-sm font-black text-paper">
-              AT
-            </div>
-            <span className="text-lg font-extrabold text-paper">أبو طارق</span>
-          </div>
-
           <h1 className="mb-2 text-2xl font-extrabold text-paper">
             Admin Login
           </h1>
