@@ -50,131 +50,137 @@ export function ReviewsClient({
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-paper">Reviews</h1>
-        <p className="text-sm text-paper/50">Manage customer reviews</p>
-      </div>
-
-      <div className="flex gap-3">
-        <div className="rounded-xl border border-ink-800 bg-ink-950 px-4 py-3">
-          <p className="text-xs text-paper/40">Pending</p>
-          <p className="text-2xl font-bold text-saffron-400">{pendingCount}</p>
+    <div className="min-h-full">
+      <div className="mx-auto max-w-[1400px]">
+        <div className="mb-8">
+          <h1 className="text-2xl font-extrabold text-gray-900">Reviews</h1>
+          <p className="text-sm text-gray-500 mt-1">Manage customer reviews</p>
         </div>
-        <div className="rounded-xl border border-ink-800 bg-ink-950 px-4 py-3">
-          <p className="text-xs text-paper/40">Approved</p>
-          <p className="text-2xl font-bold text-cobalt-500">{approvedCount}</p>
+
+        {/* Stat Cards */}
+        <div className="flex gap-4 mb-6">
+          <div className="rounded-2xl border border-gray-200 bg-white px-6 py-4 shadow-sm">
+            <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Approved</p>
+            <p className="text-3xl font-extrabold text-emerald-600 mt-1">{approvedCount}</p>
+          </div>
+          <div className="rounded-2xl border border-gray-200 bg-white px-6 py-4 shadow-sm">
+            <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Pending</p>
+            <p className="text-3xl font-extrabold text-amber-600 mt-1">{pendingCount}</p>
+          </div>
         </div>
-      </div>
 
-      <div className="flex gap-1 rounded-lg border border-ink-800 bg-ink-950 p-1 w-fit">
-        {(["all", "pending", "approved"] as Tab[]).map((t) => (
-          <button
-            key={t}
-            onClick={() => setTab(t)}
-            className={`rounded-md px-4 py-2 text-sm font-semibold transition-colors ${
-              tab === t
-                ? "bg-cobalt-500 text-paper"
-                : "text-paper/50 hover:bg-ink-800"
-            }`}
-          >
-            {t.charAt(0).toUpperCase() + t.slice(1)}
-          </button>
-        ))}
-      </div>
-
-      <div className="space-y-3">
-        <AnimatePresence mode="popLayout">
-          {filtered.length === 0 ? (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-sm text-paper/40 py-8 text-center"
+        {/* Tabs */}
+        <div className="flex gap-1 rounded-xl border border-gray-200 bg-gray-50 p-1 w-fit mb-6">
+          {(["all", "pending", "approved"] as Tab[]).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`rounded-lg px-5 py-2.5 text-sm font-semibold transition-all ${
+                tab === t
+                  ? "bg-white text-gray-900 shadow-sm"
+                  : "text-gray-500 hover:text-gray-700"
+              }`}
             >
-              No reviews found.
-            </motion.p>
-          ) : (
-            filtered.map((review) => (
+              {t.charAt(0).toUpperCase() + t.slice(1)}
+            </button>
+          ))}
+        </div>
+
+        {/* Reviews List */}
+        <div className="space-y-3">
+          <AnimatePresence mode="popLayout">
+            {filtered.length === 0 ? (
               <motion.div
-                key={review.id}
-                layout
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                className="rounded-xl border border-ink-800 bg-ink-950 p-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="rounded-2xl border border-dashed border-gray-300 py-16 text-center"
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-2">
-                      <span className="font-bold text-paper">{review.name}</span>
-                      <div className="flex items-center gap-0.5">
-                        {Array.from({ length: 5 }).map((_, i) => (
-                          <Star
-                            key={i}
-                            className={`h-4 w-4 ${
-                              i < review.rating
-                                ? "fill-saffron-400 text-saffron-400"
-                                : "text-ink-700"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <span
-                        className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                          review.approved
-                            ? "bg-cobalt-500/15 text-cobalt-500"
-                            : "bg-saffron-400/15 text-saffron-400"
-                        }`}
-                      >
-                        {review.approved ? (
-                          <>
-                            <CheckCircle2 className="h-3 w-3" /> Approved
-                          </>
-                        ) : (
-                          <>
-                            <Clock className="h-3 w-3" /> Pending
-                          </>
-                        )}
-                      </span>
-                    </div>
-
-                    <p className="text-sm text-paper/70 mb-2">{review.text}</p>
-
-                    <div className="flex items-center gap-3 text-xs text-paper/40">
-                      {review.branch && (
-                        <span>
-                          {review.branch.nameEn} (#{review.branch.number})
-                        </span>
-                      )}
-                      <span>
-                        {new Date(review.createdAt).toLocaleDateString("en-GB")}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2 shrink-0">
-                    {!review.approved && (
-                      <button
-                        onClick={() => handleApprove(review.id)}
-                        disabled={pending}
-                        className="flex items-center gap-1.5 rounded-lg bg-cobalt-500/15 px-3 py-1.5 text-xs font-semibold text-cobalt-500 transition-colors hover:bg-cobalt-500/25 disabled:opacity-50"
-                      >
-                        <Check className="h-3.5 w-3.5" /> Approve
-                      </button>
-                    )}
-                    <button
-                      onClick={() => handleDelete(review.id)}
-                      disabled={pending}
-                      className="flex items-center gap-1.5 rounded-lg bg-tomato-500/15 px-3 py-1.5 text-xs font-semibold text-tomato-500 transition-colors hover:bg-tomato-500/25 disabled:opacity-50"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" /> Delete
-                    </button>
-                  </div>
-                </div>
+                <Star size={32} className="mx-auto text-gray-200 mb-3" />
+                <p className="text-sm text-gray-400 font-medium">No reviews found.</p>
               </motion.div>
-            ))
-          )}
-        </AnimatePresence>
+            ) : (
+              filtered.map((review) => (
+                <motion.div
+                  key={review.id}
+                  layout
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-start justify-between gap-5">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-3 mb-2">
+                        <span className="font-bold text-gray-900">{review.name}</span>
+                        <div className="flex items-center gap-0.5">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`h-4 w-4 ${
+                                i < review.rating
+                                  ? "fill-amber-400 text-amber-400"
+                                  : "text-gray-200"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <span
+                          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold ${
+                            review.approved
+                              ? "bg-emerald-50 text-emerald-600"
+                              : "bg-amber-50 text-amber-600"
+                          }`}
+                        >
+                          {review.approved ? (
+                            <>
+                              <CheckCircle2 className="h-3 w-3" /> Approved
+                            </>
+                          ) : (
+                            <>
+                              <Clock className="h-3 w-3" /> Pending
+                            </>
+                          )}
+                        </span>
+                      </div>
+
+                      <p className="text-sm text-gray-600 mb-3 leading-relaxed">{review.text}</p>
+
+                      <div className="flex items-center gap-3 text-xs text-gray-400">
+                        {review.branch && (
+                          <span className="bg-gray-50 rounded-lg px-2 py-1">
+                            {review.branch.nameEn} (#{review.branch.number})
+                          </span>
+                        )}
+                        <span>
+                          {new Date(review.createdAt).toLocaleDateString("en-GB")}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      {!review.approved && (
+                        <button
+                          onClick={() => handleApprove(review.id)}
+                          disabled={pending}
+                          className="flex items-center gap-1.5 rounded-xl bg-emerald-50 px-4 py-2 text-xs font-semibold text-emerald-600 transition-colors hover:bg-emerald-100 disabled:opacity-50"
+                        >
+                          <Check className="h-3.5 w-3.5" /> Approve
+                        </button>
+                      )}
+                      <button
+                        onClick={() => handleDelete(review.id)}
+                        disabled={pending}
+                        className="flex items-center gap-1.5 rounded-xl bg-red-50 px-4 py-2 text-xs font-semibold text-red-600 transition-colors hover:bg-red-100 disabled:opacity-50"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" /> Delete
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
+              ))
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );

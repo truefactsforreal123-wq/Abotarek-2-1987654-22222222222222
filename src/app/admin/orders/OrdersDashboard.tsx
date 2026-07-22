@@ -101,23 +101,22 @@ export function OrdersDashboard({
   > = {
     submitted: {
       label: "New",
-      color: "bg-cobalt-500/15 text-cobalt-500 border border-cobalt-500/20",
+      color: "bg-blue-50 text-blue-600 border border-blue-200",
       icon: <Bell size={12} className="mr-1" />,
     },
     preparing: {
       label: "Preparing",
-      color:
-        "bg-saffron-400/15 text-saffron-400 border border-saffron-400/20",
+      color: "bg-amber-50 text-amber-600 border border-amber-200",
       icon: <ChefHat size={12} className="mr-1" />,
     },
     ready: {
       label: "Ready",
-      color: "bg-green-500/15 text-green-400 border border-green-500/20",
+      color: "bg-emerald-50 text-emerald-600 border border-emerald-200",
       icon: <PackageCheck size={12} className="mr-1" />,
     },
     served: {
       label: "Served",
-      color: "bg-green-500/10 text-green-400/60",
+      color: "bg-gray-100 text-gray-500",
       icon: null,
     },
   };
@@ -151,13 +150,13 @@ export function OrdersDashboard({
   }, []);
 
   const getTimeColor = useCallback((dateStr: string | null) => {
-    if (!dateStr) return "text-paper/40";
+    if (!dateStr) return "text-gray-400";
     const diff = Math.floor(
       (Date.now() - new Date(dateStr).getTime()) / 60000
     );
-    if (diff < 5) return "text-green-400";
-    if (diff < 15) return "text-saffron-400";
-    return "text-tomato-500";
+    if (diff < 5) return "text-emerald-600";
+    if (diff < 15) return "text-amber-600";
+    return "text-red-600";
   }, []);
 
   // Auto-refresh
@@ -250,7 +249,7 @@ export function OrdersDashboard({
     <div>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-black text-paper">Orders</h1>
+        <h1 className="text-2xl font-black text-gray-900">Orders</h1>
       </div>
 
       {/* Tabs + Filter */}
@@ -258,10 +257,10 @@ export function OrdersDashboard({
         <div className="flex gap-2">
           <button
             onClick={() => setTab("active")}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-base font-bold transition-colors ${
+            className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${
               tab === "active"
-                ? "bg-cobalt-500/15 text-cobalt-500"
-                : "text-paper/35 hover:text-paper"
+                ? "bg-red-50 text-red-600"
+                : "text-gray-500 hover:text-gray-700"
             }`}
           >
             <Bell size={18} />
@@ -269,10 +268,10 @@ export function OrdersDashboard({
           </button>
           <button
             onClick={() => setTab("history")}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-base font-bold transition-colors ${
+            className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${
               tab === "history"
-                ? "bg-cobalt-500/15 text-cobalt-500"
-                : "text-paper/35 hover:text-paper"
+                ? "bg-red-50 text-red-600"
+                : "text-gray-500 hover:text-gray-700"
             }`}
           >
             <History size={18} />
@@ -280,10 +279,10 @@ export function OrdersDashboard({
           </button>
           <button
             onClick={() => setTab("summary")}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2.5 text-base font-bold transition-colors ${
+            className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${
               tab === "summary"
-                ? "bg-cobalt-500/15 text-cobalt-500"
-                : "text-paper/35 hover:text-paper"
+                ? "bg-red-50 text-red-600"
+                : "text-gray-500 hover:text-gray-700"
             }`}
           >
             <BarChart3 size={18} />
@@ -295,7 +294,7 @@ export function OrdersDashboard({
           <select
             value={branchFilter}
             onChange={(e) => setBranchFilter(e.target.value)}
-            className="rounded-lg border border-ink-700 bg-ink-900 px-3 py-2.5 text-sm font-bold text-paper"
+            className="rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm font-bold text-gray-900 shadow-sm"
           >
             <option value="all">All Branches</option>
             {allBranches.map((b) => (
@@ -311,11 +310,11 @@ export function OrdersDashboard({
       {tab === "active" && (
         <div className="mt-6">
           {Object.keys(groupedActive).length === 0 && (
-            <div className="rounded-xl border border-dashed border-ink-700 p-12 text-center">
-              <p className="text-paper/30 text-base font-bold">
+            <div className="rounded-2xl border border-dashed border-gray-300 p-12 text-center">
+              <p className="text-gray-400 text-base font-bold">
                 No active orders
               </p>
-              <p className="mt-1 text-sm text-paper/20">
+              <p className="mt-1 text-sm text-gray-300">
                 New orders will appear here in real time
               </p>
             </div>
@@ -323,7 +322,7 @@ export function OrdersDashboard({
 
           {Object.entries(groupedActive).map(([groupKey, orders]) => (
             <div key={groupKey} className="mb-6">
-              <h3 className="text-sm font-black text-paper/40 uppercase tracking-wider mb-3">
+              <h3 className="text-sm font-black text-gray-500 uppercase tracking-wider mb-3">
                 {groupKey}
               </h3>
               <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -343,7 +342,7 @@ export function OrdersDashboard({
                     return (
                       <div
                         key={order.id}
-                        className="rounded-xl border border-ink-700 bg-ink-900 p-4"
+                        className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm"
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-2">
@@ -357,7 +356,7 @@ export function OrdersDashboard({
                               {getTimeAgo(order.submittedAt)}
                             </span>
                           </div>
-                          <span className="text-xl font-black text-saffron-400">
+                          <span className="text-xl font-black text-amber-600">
                             {total} LE
                           </span>
                         </div>
@@ -378,13 +377,13 @@ export function OrdersDashboard({
                               className="flex items-center justify-between text-sm"
                             >
                               <div className="flex-1 min-w-0">
-                                <span className="font-bold text-paper">
+                                <span className="font-bold text-gray-900">
                                   {item.quantity}x {itemName(item)}
                                 </span>
                                 {item.selectedSize &&
                                   typeof item.selectedSize === "object" &&
                                   item.selectedSize !== null && (
-                                    <span className="text-paper font-bold ml-1">
+                                    <span className="text-gray-900 font-bold ml-1">
                                       (
                                       {(
                                         item.selectedSize as {
@@ -402,7 +401,7 @@ export function OrdersDashboard({
                                         (p: string, idx: number) => (
                                           <span
                                             key={idx}
-                                            className="rounded bg-cobalt-500/15 px-1.5 py-0.5 text-xs font-bold text-cobalt-500"
+                                            className="rounded bg-blue-50 px-1.5 py-0.5 text-xs font-bold text-blue-600"
                                           >
                                             {p}
                                           </span>
@@ -411,12 +410,12 @@ export function OrdersDashboard({
                                     </div>
                                   )}
                                 {item.notes && (
-                                  <span className="text-paper/30 italic ml-1 text-sm">
+                                  <span className="text-gray-400 italic ml-1 text-sm">
                                     &mdash; &quot;{item.notes}&quot;
                                   </span>
                                 )}
                               </div>
-                              <span className="text-paper/40 shrink-0 ml-2 font-bold text-sm">
+                              <span className="text-gray-500 shrink-0 ml-2 font-bold text-sm">
                                 {Number(item.priceAtOrder)} LE
                               </span>
                             </div>
@@ -432,7 +431,7 @@ export function OrdersDashboard({
                                 )
                               }
                               disabled={acting === order.id}
-                              className="flex items-center gap-1.5 rounded-lg bg-saffron-400/10 px-3 py-2 text-sm font-bold text-saffron-400 hover:bg-saffron-400/20 transition-colors disabled:opacity-40 min-h-[44px]"
+                              className="flex items-center gap-1.5 rounded-xl bg-amber-50 px-3 py-2 text-sm font-bold text-amber-600 hover:bg-amber-100 transition-colors disabled:opacity-40 min-h-[44px]"
                             >
                               <ChefHat size={16} />
                               {acting === order.id ? "..." : "Preparing"}
@@ -446,7 +445,7 @@ export function OrdersDashboard({
                                 )
                               }
                               disabled={acting === order.id}
-                              className="flex items-center gap-1.5 rounded-lg bg-green-500/10 px-3 py-2 text-sm font-bold text-green-400 hover:bg-green-500/20 transition-colors disabled:opacity-40 min-h-[44px]"
+                              className="flex items-center gap-1.5 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-600 hover:bg-emerald-100 transition-colors disabled:opacity-40 min-h-[44px]"
                             >
                               <PackageCheck size={16} />
                               {acting === order.id ? "..." : "Ready"}
@@ -462,7 +461,7 @@ export function OrdersDashboard({
                                 )
                               }
                               disabled={acting === order.id}
-                              className="flex items-center gap-1.5 rounded-lg bg-cobalt-500/10 px-3 py-2 text-sm font-bold text-cobalt-500 hover:bg-cobalt-500/20 transition-colors disabled:opacity-40 min-h-[44px]"
+                              className="flex items-center gap-1.5 rounded-xl bg-blue-50 px-3 py-2 text-sm font-bold text-blue-600 hover:bg-blue-100 transition-colors disabled:opacity-40 min-h-[44px]"
                             >
                               <CheckCircle2 size={16} />
                               {acting === order.id ? "..." : "Served"}
@@ -471,7 +470,7 @@ export function OrdersDashboard({
                           <button
                             onClick={() => handleDelete(order.id)}
                             disabled={acting === order.id}
-                            className="flex items-center gap-1.5 rounded-lg bg-tomato-500/10 px-3 py-2 text-sm font-bold text-tomato-500 hover:bg-tomato-500/20 transition-colors disabled:opacity-40 min-h-[44px]"
+                            className="flex items-center gap-1.5 rounded-xl bg-red-50 px-3 py-2 text-sm font-bold text-red-600 hover:bg-red-100 transition-colors disabled:opacity-40 min-h-[44px]"
                           >
                             {acting === order.id ? "..." : "Delete"}
                           </button>
@@ -489,11 +488,11 @@ export function OrdersDashboard({
       {tab === "history" && (
         <div className="mt-6">
           {filteredServed.length === 0 && (
-            <div className="rounded-xl border border-dashed border-ink-700 p-12 text-center">
-              <p className="text-paper/30 text-base font-bold">
+            <div className="rounded-2xl border border-dashed border-gray-300 p-12 text-center">
+              <p className="text-gray-400 text-base font-bold">
                 No served orders yet
               </p>
-              <p className="mt-1 text-sm text-paper/20">
+              <p className="mt-1 text-sm text-gray-300">
                 Served orders auto-delete after {historyTTL} hours
               </p>
             </div>
@@ -507,15 +506,15 @@ export function OrdersDashboard({
               return (
                 <div
                   key={order.id}
-                  className="rounded-xl border border-green-500/10 bg-green-500/5 p-4 opacity-70"
+                  className="rounded-2xl border border-gray-200 bg-gray-50 p-4 opacity-70"
                 >
                   <div className="flex items-center gap-2 mb-2">
-                    <CheckCircle2 size={16} className="text-green-400" />
-                    <span className="text-sm font-bold text-green-400">
+                    <CheckCircle2 size={16} className="text-emerald-600" />
+                    <span className="text-sm font-bold text-emerald-600">
                       Table {order.table.tableNumber} —{" "}
                       {order.table.branch.nameEn}
                     </span>
-                    <span className="text-sm text-paper/30">
+                    <span className="text-sm text-gray-400">
                       {getTimeAgo(order.servedAt)}
                     </span>
                   </div>
@@ -526,12 +525,12 @@ export function OrdersDashboard({
                         className="flex items-center justify-between text-sm"
                       >
                         <div className="flex-1 min-w-0">
-                          <span className="text-paper/50">
+                          <span className="text-gray-600">
                             {item.quantity}x {itemName(item)}
                             {item.selectedSize &&
                               typeof item.selectedSize === "object" &&
                               item.selectedSize !== null && (
-                                <span className="text-paper/70 ml-1">
+                                <span className="text-gray-700 ml-1">
                                   (
                                   {(
                                     item.selectedSize as {
@@ -543,20 +542,20 @@ export function OrdersDashboard({
                               )}
                           </span>
                         </div>
-                        <span className="text-paper/30 shrink-0 ml-2 text-sm">
+                        <span className="text-gray-400 shrink-0 ml-2 text-sm">
                           {Number(item.priceAtOrder)} LE
                         </span>
                       </div>
                     ))}
                   </div>
                   <div className="mt-2 flex items-center justify-between">
-                    <span className="text-base font-bold text-saffron-400">
+                    <span className="text-base font-bold text-amber-600">
                       {total} LE
                     </span>
                     <button
                       onClick={() => handleDelete(order.id)}
                       disabled={acting === order.id}
-                      className="text-xs font-bold text-tomato-500/50 hover:text-tomato-500 transition-colors disabled:opacity-40"
+                      className="text-xs font-bold text-red-400 hover:text-red-600 transition-colors disabled:opacity-40"
                     >
                       {acting === order.id ? "..." : "Delete"}
                     </button>
@@ -573,22 +572,22 @@ export function OrdersDashboard({
         <div className="mt-6">
           {/* Date Picker */}
           <div className="flex items-center gap-3 mb-6">
-            <CalendarDays size={20} className="text-paper/40" />
+            <CalendarDays size={20} className="text-gray-400" />
             <input
               type="date"
               value={summaryDate}
               max={todayStr}
               onChange={(e) => setSummaryDate(e.target.value)}
-              className="rounded-lg border border-ink-700 bg-ink-800 px-4 py-2.5 text-base font-bold text-paper"
+              className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-base font-bold text-gray-900 shadow-sm"
             />
             {summaryDate === todayStr ? (
-              <span className="rounded-lg bg-green-500/15 px-3 py-1.5 text-sm font-bold text-green-400">
+              <span className="rounded-xl bg-emerald-50 px-3 py-1.5 text-sm font-bold text-emerald-600">
                 Today
               </span>
             ) : (
               <button
                 onClick={() => setSummaryDate(todayStr)}
-                className="rounded-lg bg-ink-800 px-3 py-1.5 text-sm font-bold text-paper/50 hover:text-paper transition-colors"
+                className="rounded-xl bg-gray-100 px-3 py-1.5 text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors"
               >
                 Back to Today
               </button>
@@ -596,39 +595,39 @@ export function OrdersDashboard({
           </div>
 
           {summaryLoading ? (
-            <div className="rounded-xl border border-ink-700 bg-ink-900 p-12 text-center">
-              <p className="text-base text-paper/40">Loading...</p>
+            <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center shadow-sm">
+              <p className="text-base text-gray-400">Loading...</p>
             </div>
           ) : summaryData ? (
             <>
               {/* Stats Cards */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-                <div className="rounded-xl border border-ink-700 bg-ink-900 p-5">
-                  <p className="text-sm text-paper/40 uppercase">Orders</p>
-                  <p className="text-4xl font-black text-paper mt-1">
+                <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                  <p className="text-sm text-gray-500 uppercase">Orders</p>
+                  <p className="text-4xl font-black text-gray-900 mt-1">
                     {summaryData.totalOrders}
                   </p>
                 </div>
-                <div className="rounded-xl border border-ink-700 bg-ink-900 p-5">
-                  <p className="text-sm text-paper/40 uppercase">Revenue</p>
-                  <p className="text-4xl font-black text-saffron-400 mt-1">
+                <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                  <p className="text-sm text-gray-500 uppercase">Revenue</p>
+                  <p className="text-4xl font-black text-amber-600 mt-1">
                     {summaryData.totalRevenue}{" "}
                     <span className="text-lg">LE</span>
                   </p>
                 </div>
-                <div className="rounded-xl border border-ink-700 bg-ink-900 p-5">
-                  <p className="text-sm text-paper/40 uppercase">
+                <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                  <p className="text-sm text-gray-500 uppercase">
                     Items Sold
                   </p>
-                  <p className="text-4xl font-black text-paper mt-1">
+                  <p className="text-4xl font-black text-gray-900 mt-1">
                     {summaryData.itemsSold}
                   </p>
                 </div>
-                <div className="rounded-xl border border-ink-700 bg-ink-900 p-5">
-                  <p className="text-sm text-paper/40 uppercase">
+                <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                  <p className="text-sm text-gray-500 uppercase">
                     Avg Order
                   </p>
-                  <p className="text-4xl font-black text-paper mt-1">
+                  <p className="text-4xl font-black text-gray-900 mt-1">
                     {summaryData.totalOrders > 0
                       ? Math.round(
                           summaryData.totalRevenue / summaryData.totalOrders
@@ -642,29 +641,29 @@ export function OrdersDashboard({
               <div className="grid gap-6 sm:grid-cols-2">
                 {/* Top Items */}
                 {summaryData.topItems.length > 0 && (
-                  <div className="rounded-xl border border-ink-700 bg-ink-900 p-5">
-                    <h3 className="text-base font-black text-paper/50 uppercase mb-4">
+                  <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <h3 className="text-base font-black text-gray-500 uppercase mb-4">
                       Top Selling Items
                     </h3>
                     <div className="space-y-2">
                       {summaryData.topItems.map((item, idx) => (
                         <div
                           key={idx}
-                          className="flex items-center justify-between rounded-lg bg-ink-800 px-4 py-2.5"
+                          className="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-2.5"
                         >
                           <div className="flex items-center gap-3">
-                            <span className="text-sm font-black text-paper/25 w-6">
+                            <span className="text-sm font-black text-gray-300 w-6">
                               #{idx + 1}
                             </span>
-                            <span className="text-base font-bold text-paper">
+                            <span className="text-base font-bold text-gray-900">
                               {item.nameEn}
                             </span>
                           </div>
                           <div className="flex items-center gap-4">
-                            <span className="text-sm text-paper/40">
+                            <span className="text-sm text-gray-500">
                               x{item.quantity}
                             </span>
-                            <span className="text-base font-bold text-saffron-400">
+                            <span className="text-base font-bold text-amber-600">
                               {item.revenue} LE
                             </span>
                           </div>
@@ -676,24 +675,24 @@ export function OrdersDashboard({
 
                 {/* Branch Stats */}
                 {summaryData.branchStats.length > 0 && (
-                  <div className="rounded-xl border border-ink-700 bg-ink-900 p-5">
-                    <h3 className="text-base font-black text-paper/50 uppercase mb-4">
+                  <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                    <h3 className="text-base font-black text-gray-500 uppercase mb-4">
                       Orders by Branch
                     </h3>
                     <div className="space-y-2">
                       {summaryData.branchStats.map((branch, idx) => (
                         <div
                           key={idx}
-                          className="flex items-center justify-between rounded-lg bg-ink-800 px-4 py-2.5"
+                          className="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-2.5"
                         >
-                          <span className="text-base font-bold text-paper">
+                          <span className="text-base font-bold text-gray-900">
                             {branch.nameEn}
                           </span>
                           <div className="flex items-center gap-4">
-                            <span className="text-sm text-paper/40">
+                            <span className="text-sm text-gray-500">
                               {branch.count} orders
                             </span>
-                            <span className="text-base font-bold text-saffron-400">
+                            <span className="text-base font-bold text-amber-600">
                               {branch.revenue} LE
                             </span>
                           </div>
@@ -705,8 +704,8 @@ export function OrdersDashboard({
               </div>
 
               {summaryData.totalOrders === 0 && (
-                <div className="rounded-xl border border-dashed border-ink-700 p-12 text-center">
-                  <p className="text-paper/30 text-base font-bold">
+                <div className="rounded-2xl border border-dashed border-gray-300 p-12 text-center">
+                  <p className="text-gray-400 text-base font-bold">
                     No orders on this day
                   </p>
                 </div>

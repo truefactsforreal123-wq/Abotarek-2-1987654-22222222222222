@@ -32,9 +32,7 @@ type RecentOrder = {
 
 interface DashboardData {
   branchCount: number;
-  categoryCount: number;
   menuItemCount: number;
-  reviewCount: number;
   todayOrderCount: number;
   tableCount: number;
   recentOrders: RecentOrder[];
@@ -45,9 +43,9 @@ const statCards = [
     key: "todayOrders",
     label: "Today's Orders",
     icon: ShoppingBag,
-    gradient: "from-ember/20 via-ember/10 to-transparent",
-    iconBg: "bg-ember/15 text-ember",
-    accent: "text-ember",
+    gradient: "from-red-50 via-transparent to-transparent",
+    iconBg: "bg-red-50 text-red-500",
+    accent: "text-red-600",
     getData: (d: DashboardData) => d.todayOrderCount,
     large: true,
   },
@@ -55,9 +53,9 @@ const statCards = [
     key: "menuItems",
     label: "Menu Items",
     icon: UtensilsCrossed,
-    gradient: "from-cobalt-500/15 via-cobalt-500/5 to-transparent",
-    iconBg: "bg-cobalt-500/15 text-cobalt-500",
-    accent: "text-cobalt-500",
+    gradient: "from-blue-50 via-transparent to-transparent",
+    iconBg: "bg-blue-50 text-blue-600",
+    accent: "text-blue-600",
     getData: (d: DashboardData) => d.menuItemCount,
     large: false,
   },
@@ -65,9 +63,9 @@ const statCards = [
     key: "activeTables",
     label: "Active Tables",
     icon: LayoutGrid,
-    gradient: "from-gold-soft/10 via-gold-soft/5 to-transparent",
-    iconBg: "bg-saffron-400/15 text-saffron-400",
-    accent: "text-saffron-400",
+    gradient: "from-amber-50 via-transparent to-transparent",
+    iconBg: "bg-amber-50 text-amber-600",
+    accent: "text-amber-600",
     getData: (d: DashboardData) => d.tableCount,
     large: false,
   },
@@ -75,19 +73,19 @@ const statCards = [
     key: "branches",
     label: "Branches",
     icon: Building2,
-    gradient: "from-emerald-500/10 via-emerald-500/5 to-transparent",
-    iconBg: "bg-emerald-500/15 text-emerald-400",
-    accent: "text-emerald-400",
+    gradient: "from-emerald-50 via-transparent to-transparent",
+    iconBg: "bg-emerald-50 text-emerald-600",
+    accent: "text-emerald-600",
     getData: (d: DashboardData) => d.branchCount,
     large: false,
   },
 ];
 
 const statusBadge: Record<string, { bg: string; text: string; label: string }> = {
-  submitted: { bg: "bg-cobalt-500/12", text: "text-cobalt-500", label: "New" },
-  preparing: { bg: "bg-saffron-400/12", text: "text-saffron-400", label: "Preparing" },
-  ready: { bg: "bg-emerald-500/12", text: "text-emerald-400", label: "Ready" },
-  served: { bg: "bg-paper/5", text: "text-paper/40", label: "Served" },
+  submitted: { bg: "bg-blue-50", text: "text-blue-600", label: "New" },
+  preparing: { bg: "bg-amber-50", text: "text-amber-600", label: "Preparing" },
+  ready: { bg: "bg-emerald-50", text: "text-emerald-600", label: "Ready" },
+  served: { bg: "bg-gray-50", text: "text-gray-400", label: "Served" },
 };
 
 function timeAgo(dateStr: string | null) {
@@ -109,29 +107,29 @@ export function DashboardClient({ data }: { data: DashboardData }) {
     <div className="min-h-full">
       <div className="mx-auto max-w-[1400px]">
         <header className="mb-8">
-          <h1 className="text-2xl font-extrabold text-paper tracking-tight">
+          <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
             Dashboard
           </h1>
-          <p className="mt-1.5 text-sm text-paper/40">
+          <p className="mt-1.5 text-sm text-gray-500">
             Welcome back — here&apos;s what&apos;s happening today.
           </p>
         </header>
 
-        {/* Stat Cards — asymmetric grid */}
+        {/* Stat Cards */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Hero card — today's orders, spans 2 cols */}
+          {/* Hero card — today's orders */}
           {statCards.filter(c => c.large).map((card, i) => (
             <motion.div
               key={card.key}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className={`relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6 sm:col-span-2 lg:col-span-2`}
+              className="relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:col-span-2 lg:col-span-2"
             >
               <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} pointer-events-none`} />
               <div className="relative flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-semibold text-paper/40">{card.label}</p>
+                  <p className="text-sm font-semibold text-gray-500">{card.label}</p>
                   <p className={`mt-2 text-5xl font-extrabold tracking-tight ${card.accent}`}>
                     {card.getData(data)}
                   </p>
@@ -150,20 +148,18 @@ export function DashboardClient({ data }: { data: DashboardData }) {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: (i + 2) * 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="relative overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5"
+              className="relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"
             >
               <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} pointer-events-none`} />
               <div className="relative flex items-center justify-between">
-                <div
-                  className={`flex h-10 w-10 items-center justify-center rounded-xl ${card.iconBg}`}
-                >
+                <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${card.iconBg}`}>
                   <card.icon size={20} />
                 </div>
-                <span className="text-2xl font-extrabold text-paper">
+                <span className="text-2xl font-extrabold text-gray-900">
                   {card.getData(data)}
                 </span>
               </div>
-              <p className="relative mt-3 text-sm font-semibold text-paper/40">
+              <p className="relative mt-3 text-sm font-semibold text-gray-500">
                 {card.label}
               </p>
             </motion.div>
@@ -181,7 +177,7 @@ export function DashboardClient({ data }: { data: DashboardData }) {
             <Link
               key={action.href}
               href={action.href}
-              className="btn-ghost"
+              className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition-all hover:bg-gray-50 hover:-translate-y-0.5"
             >
               <action.icon size={15} /> {action.label}
             </Link>
@@ -189,12 +185,12 @@ export function DashboardClient({ data }: { data: DashboardData }) {
         </div>
 
         {/* Recent Orders */}
-        <div className="mt-6 overflow-hidden rounded-2xl border border-white/[0.06] bg-white/[0.02]">
-          <div className="flex items-center justify-between border-b border-white/[0.06] px-6 py-4">
-            <h2 className="text-sm font-bold text-paper/70 uppercase tracking-wider">Recent Orders</h2>
+        <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
+            <h2 className="text-sm font-bold text-gray-700 uppercase tracking-wider">Recent Orders</h2>
             <Link
               href="/admin/orders"
-              className="flex items-center gap-1 text-sm font-semibold text-ember hover:text-ember/80 transition-colors"
+              className="flex items-center gap-1 text-sm font-semibold text-red-600 hover:text-red-700 transition-colors"
             >
               View all <ArrowRight size={14} />
             </Link>
@@ -202,26 +198,26 @@ export function DashboardClient({ data }: { data: DashboardData }) {
 
           {data.recentOrders.length === 0 ? (
             <div className="px-6 py-14 text-center">
-              <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/[0.04] mb-3">
-                <ShoppingBag size={20} className="text-paper/20" />
+              <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-50 mb-3">
+                <ShoppingBag size={20} className="text-gray-300" />
               </div>
-              <p className="text-sm text-paper/30">No active orders right now.</p>
+              <p className="text-sm text-gray-400">No active orders right now.</p>
             </div>
           ) : (
-            <div className="divide-y divide-white/[0.04]">
+            <div className="divide-y divide-gray-100">
               {data.recentOrders.map((order) => {
                 const badge = statusBadge[order.status] ?? statusBadge.submitted;
                 return (
                   <div
                     key={order.id}
-                    className="flex items-center justify-between gap-4 px-6 py-3.5 transition-colors hover:bg-white/[0.02]"
+                    className="flex items-center justify-between gap-4 px-6 py-3.5 transition-colors hover:bg-gray-50/50"
                   >
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2.5">
-                        <span className="font-bold text-paper text-sm">
+                        <span className="font-bold text-gray-900 text-sm">
                           Table {order.table.tableNumber}
                         </span>
-                        <span className="text-xs text-paper/25">
+                        <span className="text-xs text-gray-400">
                           {order.table.branch.nameEn}
                         </span>
                         <span
@@ -230,7 +226,7 @@ export function DashboardClient({ data }: { data: DashboardData }) {
                           {badge.label}
                         </span>
                       </div>
-                      <p className="mt-1 truncate text-xs text-paper/35">
+                      <p className="mt-1 truncate text-xs text-gray-500">
                         {order.items
                           .map(
                             (i) =>
@@ -240,10 +236,10 @@ export function DashboardClient({ data }: { data: DashboardData }) {
                       </p>
                     </div>
                     <div className="text-right shrink-0">
-                      <p className="font-extrabold text-sm text-paper">
+                      <p className="font-extrabold text-sm text-gray-900">
                         EGP {orderTotal(order.items).toFixed(0)}
                       </p>
-                      <p className="mt-0.5 text-[11px] text-paper/30">
+                      <p className="mt-0.5 text-[11px] text-gray-400">
                         {timeAgo(order.submittedAt)}
                       </p>
                     </div>

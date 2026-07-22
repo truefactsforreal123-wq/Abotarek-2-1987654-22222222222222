@@ -29,7 +29,7 @@ const emptyForm = {
 };
 
 const fieldClass =
-  "w-full rounded-lg border border-ink-700 bg-ink-800 px-3 py-2 text-sm text-paper placeholder:text-paper/30 focus:border-cobalt-500 focus:outline-none";
+  "w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-red-300 focus:outline-none focus:ring-2 focus:ring-red-100";
 
 export function BranchesClient({ branches }: { branches: Branch[] }) {
   const [editing, setEditing] = useState<Branch | null>(null);
@@ -86,10 +86,10 @@ export function BranchesClient({ branches }: { branches: Branch[] }) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-paper">Branches</h1>
-          <p className="text-sm text-paper/50">Manage restaurant locations</p>
+          <h1 className="text-2xl font-extrabold text-gray-900">Branches</h1>
+          <p className="text-sm text-gray-500">Manage restaurant locations</p>
         </div>
-        <button onClick={openCreate} className="btn-primary">
+        <button onClick={openCreate} className="btn-primary text-sm">
           <Plus className="h-4 w-4" /> New Branch
         </button>
       </div>
@@ -103,34 +103,34 @@ export function BranchesClient({ branches }: { branches: Branch[] }) {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="rounded-xl border border-ink-800 bg-ink-950 p-4"
+              className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"
             >
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <span className="inline-block rounded-md bg-cobalt-500/15 px-2 py-0.5 text-xs font-bold text-cobalt-500">
+                  <span className="inline-block rounded-lg bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-600">
                     #{branch.number}
                   </span>
-                  <h3 className="mt-2 font-bold text-paper">{branch.nameEn}</h3>
-                  <p className="text-sm text-paper/50">{branch.nameAr}</p>
+                  <h3 className="mt-2 font-bold text-gray-900">{branch.nameEn}</h3>
+                  <p className="text-sm text-gray-500">{branch.nameAr}</p>
                 </div>
                 <div className="flex gap-1.5">
                   <button
                     onClick={() => openEdit(branch)}
-                    className="rounded-lg p-2 text-paper/40 hover:bg-ink-800 hover:text-paper transition-colors"
+                    className="rounded-lg p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
                   >
                     <Pencil className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(branch.id)}
                     disabled={pending}
-                    className="rounded-lg p-2 text-paper/40 hover:bg-tomato-500/15 hover:text-tomato-500 transition-colors disabled:opacity-50"
+                    className="rounded-lg p-2 text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors disabled:opacity-50"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
               </div>
 
-              <div className="space-y-1.5 text-xs text-paper/50">
+              <div className="space-y-1.5 text-xs text-gray-500">
                 <div className="flex items-center gap-2">
                   <MapPin className="h-3.5 w-3.5 shrink-0" />
                   <span>{branch.addressEn}</span>
@@ -156,7 +156,7 @@ export function BranchesClient({ branches }: { branches: Branch[] }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-40 bg-black/60"
+              className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
               onClick={closeModal}
             />
             <motion.div
@@ -165,8 +165,8 @@ export function BranchesClient({ branches }: { branches: Branch[] }) {
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="fixed inset-0 z-50 flex items-center justify-center p-4"
             >
-              <div className="w-full max-w-lg rounded-2xl border border-ink-700 bg-ink-900 p-6 shadow-2xl">
-                <h2 className="mb-4 text-lg font-extrabold text-paper">
+              <div className="w-full max-w-lg rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl">
+                <h2 className="mb-4 text-lg font-extrabold text-gray-900">
                   {editing ? "Edit Branch" : "New Branch"}
                 </h2>
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -220,13 +220,13 @@ export function BranchesClient({ branches }: { branches: Branch[] }) {
                   />
                 </div>
                 <div className="mt-5 flex justify-end gap-3">
-                  <button onClick={closeModal} className="btn-ghost">
+                  <button onClick={closeModal} className="btn-ghost text-sm">
                     Cancel
                   </button>
                   <button
                     onClick={handleSave}
                     disabled={pending}
-                    className="btn-primary disabled:opacity-50"
+                    className="btn-primary text-sm disabled:opacity-50"
                   >
                     {pending ? "Saving..." : "Save"}
                   </button>

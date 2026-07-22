@@ -19,13 +19,13 @@ function Toggle({
       aria-checked={checked}
       onClick={() => onChange(!checked)}
       className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer items-center rounded-full transition-colors ${
-        checked ? "bg-cobalt-500" : "bg-ink-700"
+        checked ? "bg-red-600" : "bg-gray-300"
       }`}
     >
       <motion.span
         layout
         transition={{ type: "spring", stiffness: 500, damping: 30 }}
-        className={`inline-block h-5 w-5 rounded-full bg-paper shadow-md ${
+        className={`inline-block h-5 w-5 rounded-full bg-white shadow-md ${
           checked ? "ml-6" : "ml-1"
         }`}
       />
@@ -65,19 +65,19 @@ export function SettingsClient({
   return (
     <div className="space-y-8 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-extrabold text-paper">Settings</h1>
-        <p className="text-sm text-paper/50">Configure system preferences</p>
+        <h1 className="text-2xl font-extrabold text-gray-900">Settings</h1>
+        <p className="text-sm text-gray-500">Configure system preferences</p>
       </div>
 
       <div className="space-y-6">
-        <div className="rounded-xl border border-ink-800 bg-ink-950 p-5">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between mb-1">
-            <label className="text-sm font-bold text-paper">
+            <label className="text-sm font-bold text-gray-900">
               Order TTL (hours)
             </label>
-            <span className="text-sm font-bold text-cobalt-500">{ttl}h</span>
+            <span className="text-sm font-bold text-red-600">{ttl}h</span>
           </div>
-          <p className="text-xs text-paper/40 mb-4">
+          <p className="text-xs text-gray-500 mb-4">
             Auto-expire orders after this duration
           </p>
           <input
@@ -86,21 +86,21 @@ export function SettingsClient({
             max={72}
             value={ttl}
             onChange={(e) => setTtl(Number(e.target.value))}
-            className="w-full accent-cobalt-500"
+            className="w-full accent-red-600"
           />
-          <div className="flex justify-between text-xs text-paper/30 mt-1">
+          <div className="flex justify-between text-xs text-gray-400 mt-1">
             <span>1h</span>
             <span>72h</span>
           </div>
         </div>
 
-        <div className="rounded-xl border border-ink-800 bg-ink-950 p-5">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-bold text-paper">
+              <p className="text-sm font-bold text-gray-900">
                 Live Order Tracking
               </p>
-              <p className="text-xs text-paper/40">
+              <p className="text-xs text-gray-500">
                 Show real-time order status to customers
               </p>
             </div>
@@ -108,11 +108,11 @@ export function SettingsClient({
           </div>
         </div>
 
-        <div className="rounded-xl border border-ink-800 bg-ink-950 p-5">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-bold text-paper">Sound Alerts</p>
-              <p className="text-xs text-paper/40">
+              <p className="text-sm font-bold text-gray-900">Sound Alerts</p>
+              <p className="text-xs text-gray-500">
                 Play sound for new incoming orders
               </p>
             </div>
@@ -124,7 +124,7 @@ export function SettingsClient({
       <button
         onClick={handleSave}
         disabled={pending}
-        className="btn-primary disabled:opacity-50"
+        className="btn-primary text-sm disabled:opacity-50"
       >
         {saved ? (
           <>

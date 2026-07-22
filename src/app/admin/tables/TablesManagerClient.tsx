@@ -246,8 +246,8 @@ export function TablesManagerClient({
 
   if (branches.length === 0) {
     return (
-      <div className="rounded-xl border border-dashed border-ink-700 bg-ink-900 p-12 text-center">
-        <p className="text-base font-bold text-paper/30">
+      <div className="rounded-2xl border border-dashed border-gray-300 py-16 text-center">
+        <p className="text-base font-bold text-gray-400">
           No branches exist yet. Create a branch first before managing tables.
         </p>
         <a
@@ -261,322 +261,322 @@ export function TablesManagerClient({
   }
 
   return (
-    <div className="space-y-5">
-      {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-3">
-        <select
-          value={selectedBranch}
-          onChange={(e) => setSelectedBranch(Number(e.target.value))}
-          className="rounded-lg border border-ink-700 bg-ink-900 px-4 py-2.5 text-sm font-bold text-paper"
-        >
-          {branches.map((b) => (
-            <option key={b.id} value={b.id}>
-              {b.nameEn}
-            </option>
-          ))}
-        </select>
-
-        <span className="text-sm font-bold text-paper/35">
-          {filtered.length} tables
-        </span>
-
-        <div className="flex-1" />
-
-        <button
-          onClick={handlePrintAll}
-          disabled={filtered.length === 0}
-          className="btn-ghost text-xs disabled:opacity-30"
-        >
-          <Printer size={14} />
-          Print All
-        </button>
-
-        <button
-          onClick={handleDownloadAllPDF}
-          disabled={filtered.length === 0}
-          className="btn-ghost text-xs disabled:opacity-30"
-        >
-          <Download size={14} />
-          Download PDF
-        </button>
-
-        <button
-          onClick={() => {
-            setShowAdd(!showAdd);
-            setAddMode("single");
-          }}
-          className="btn-primary text-sm"
-        >
-          <Plus size={16} />
-          Add Table
-        </button>
-      </div>
-
-      {/* Add Table Panel */}
-      {showAdd && (
-        <div className="rounded-xl border border-ink-700 bg-ink-900 p-5 space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-black text-paper">
-              Add to {activeBranch?.nameEn}
-            </h3>
-            <button
-              onClick={() => setShowAdd(false)}
-              className="text-paper/30 hover:text-paper"
-            >
-              <X size={16} />
-            </button>
-          </div>
-
-          {/* Mode Toggle */}
-          <div className="flex gap-2">
-            <button
-              onClick={() => setAddMode("single")}
-              className={`rounded-lg px-4 py-2 text-sm font-bold transition-colors ${
-                addMode === "single"
-                  ? "bg-cobalt-500/15 text-cobalt-500"
-                  : "bg-ink-800 text-paper/40 hover:text-paper/60"
-              }`}
-            >
-              Single Table
-            </button>
-            <button
-              onClick={() => setAddMode("batch")}
-              className={`rounded-lg px-4 py-2 text-sm font-bold transition-colors ${
-                addMode === "batch"
-                  ? "bg-cobalt-500/15 text-cobalt-500"
-                  : "bg-ink-800 text-paper/40 hover:text-paper/60"
-              }`}
-            >
-              Multiple Tables
-            </button>
-          </div>
-
-          {addMode === "single" ? (
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-bold text-paper/50">#</span>
-              <input
-                type="number"
-                min={1}
-                value={newTableNum}
-                onChange={(e) => setNewTableNum(e.target.value)}
-                placeholder={String(nextTableNum)}
-                className="w-28 rounded-lg border border-ink-700 bg-ink-800 px-4 py-2.5 text-base font-bold text-paper placeholder:text-paper/25"
-              />
-              <button onClick={handleCreate} className="btn-primary text-sm">
-                Create
-              </button>
-            </div>
-          ) : (
-            <div className="flex flex-wrap items-end gap-4">
-              <div>
-                <label className="text-xs font-bold text-paper/40 mb-1 block">
-                  Start from #
-                </label>
-                <input
-                  type="number"
-                  min={1}
-                  value={batchStart}
-                  onChange={(e) => setBatchStart(e.target.value)}
-                  placeholder={String(nextTableNum)}
-                  className="w-24 rounded-lg border border-ink-700 bg-ink-800 px-4 py-2.5 text-base font-bold text-paper placeholder:text-paper/25"
-                />
-              </div>
-              <div>
-                <label className="text-xs font-bold text-paper/40 mb-1 block">
-                  Count
-                </label>
-                <input
-                  type="number"
-                  min={1}
-                  max={500}
-                  value={batchCount}
-                  onChange={(e) => setBatchCount(e.target.value)}
-                  className="w-24 rounded-lg border border-ink-700 bg-ink-800 px-4 py-2.5 text-base font-bold text-paper placeholder:text-paper/25"
-                />
-              </div>
-              <button
-                onClick={handleBatchGenerate}
-                className="btn-primary text-sm"
-              >
-                Create {batchCount} Tables
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Table Cards Grid */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-        {filtered.map((table) => {
-          const url = qrUrl(origin, table.tableNumber, table.qrToken);
-          return (
-            <div
-              key={table.id}
-              className={`group rounded-xl border p-5 transition-all hover:scale-[1.01] ${
-                table.isActive
-                  ? "border-ink-700 bg-ink-900 hover:border-ink-600"
-                  : "border-tomato-500/20 bg-tomato-500/5 opacity-60"
-              }`}
-            >
-              {/* Header */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2.5">
-                  <Hash size={16} className="text-paper/30" />
-                  <span className="text-xl font-black text-paper">
-                    {table.tableNumber}
-                  </span>
-                  {!table.isActive && (
-                    <span className="rounded-md bg-tomato-500/15 px-2 py-0.5 text-[10px] font-black text-tomato-500">
-                      Inactive
-                    </span>
-                  )}
-                </div>
-                <span className="text-xs text-paper/30">
-                  {table.orders.length} orders
-                </span>
-              </div>
-
-              {/* Branch name */}
-              <p className="mt-1 text-xs text-paper/35">
-                {table.branch.nameEn}
-              </p>
-
-              {/* Actions */}
-              <div className="mt-4 flex flex-wrap gap-2">
-                <button
-                  onClick={() => setQrModal(table)}
-                  className="flex items-center gap-1.5 rounded-lg bg-cobalt-500/10 px-3 py-2 text-xs font-bold text-cobalt-500 hover:bg-cobalt-500/20 transition-colors"
-                >
-                  <Eye size={14} />
-                  QR
-                </button>
-
-                <button
-                  onClick={() => handleDownloadPDF(table)}
-                  className="flex items-center gap-1.5 rounded-lg bg-ink-800 px-3 py-2 text-xs font-bold text-paper/50 hover:bg-ink-700 hover:text-paper transition-colors"
-                >
-                  <Download size={14} />
-                  PDF
-                </button>
-
-                <button
-                  onClick={() => handlePrintQR(table)}
-                  className="flex items-center gap-1.5 rounded-lg bg-ink-800 px-3 py-2 text-xs font-bold text-paper/50 hover:bg-ink-700 hover:text-paper transition-colors"
-                >
-                  <Printer size={14} />
-                </button>
-
-                <button
-                  onClick={() => handleRegenerateToken(table.id)}
-                  disabled={acting === table.id}
-                  className="flex items-center gap-1.5 rounded-lg bg-saffron-500/10 px-3 py-2 text-xs font-bold text-saffron-400 hover:bg-saffron-500/20 transition-colors disabled:opacity-40"
-                >
-                  <RefreshCw size={14} />
-                </button>
-
-                <button
-                  onClick={() => handleToggle(table.id)}
-                  disabled={acting === table.id}
-                  className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition-colors disabled:opacity-40 ${
-                    table.isActive
-                      ? "bg-ink-800 text-paper/40 hover:bg-tomato-500/15 hover:text-tomato-500"
-                      : "bg-green-500/10 text-green-400 hover:bg-green-500/20"
-                  }`}
-                >
-                  {table.isActive ? (
-                    <>
-                      <PowerOff size={14} />
-                      Off
-                    </>
-                  ) : (
-                    <>
-                      <Power size={14} />
-                      On
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-          );
-        })}
-
-        {filtered.length === 0 && (
-          <p className="col-span-full py-12 text-center text-base text-paper/30">
-            No tables in this branch yet. Use the buttons above to add some.
-          </p>
-        )}
-      </div>
-
-      {/* QR View Modal */}
-      {qrModal && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
-          onClick={() => setQrModal(null)}
-        >
-          <div
-            className="w-full max-w-sm rounded-2xl border border-ink-700 bg-ink-900 p-8 text-center"
-            onClick={(e) => e.stopPropagation()}
+    <div className="min-h-full">
+      <div className="mx-auto max-w-[1400px] space-y-5">
+        {/* Toolbar */}
+        <div className="flex flex-wrap items-center gap-3">
+          <select
+            value={selectedBranch}
+            onChange={(e) => setSelectedBranch(Number(e.target.value))}
+            className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-bold text-gray-900 shadow-sm"
           >
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-black text-paper">
-                Table {qrModal.tableNumber}
+            {branches.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.nameEn}
+              </option>
+            ))}
+          </select>
+
+          <span className="text-sm font-bold text-gray-400">
+            {filtered.length} tables
+          </span>
+
+          <div className="flex-1" />
+
+          <button
+            onClick={handlePrintAll}
+            disabled={filtered.length === 0}
+            className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-semibold text-gray-600 shadow-sm transition-all hover:bg-gray-50 disabled:opacity-30"
+          >
+            <Printer size={14} />
+            Print All
+          </button>
+
+          <button
+            onClick={handleDownloadAllPDF}
+            disabled={filtered.length === 0}
+            className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-semibold text-gray-600 shadow-sm transition-all hover:bg-gray-50 disabled:opacity-30"
+          >
+            <Download size={14} />
+            Download PDF
+          </button>
+
+          <button
+            onClick={() => {
+              setShowAdd(!showAdd);
+              setAddMode("single");
+            }}
+            className="btn-primary text-sm"
+          >
+            <Plus size={16} />
+            Add Table
+          </button>
+        </div>
+
+        {/* Add Table Panel */}
+        {showAdd && (
+          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-black text-gray-900">
+                Add to {activeBranch?.nameEn}
               </h3>
               <button
-                onClick={() => setQrModal(null)}
-                className="text-paper/30 hover:text-paper"
+                onClick={() => setShowAdd(false)}
+                className="text-gray-400 hover:text-gray-700"
               >
-                <X size={20} />
+                <X size={16} />
               </button>
             </div>
 
-            <p className="text-sm text-paper/40 mb-4">
-              {qrModal.branch.nameEn}
-            </p>
+            {/* Mode Toggle */}
+            <div className="flex gap-2">
+              <button
+                onClick={() => setAddMode("single")}
+                className={`rounded-xl px-4 py-2 text-sm font-bold transition-all ${
+                  addMode === "single"
+                    ? "bg-red-50 text-red-600"
+                    : "bg-gray-50 text-gray-400 hover:text-gray-600"
+                }`}
+              >
+                Single Table
+              </button>
+              <button
+                onClick={() => setAddMode("batch")}
+                className={`rounded-xl px-4 py-2 text-sm font-bold transition-all ${
+                  addMode === "batch"
+                    ? "bg-red-50 text-red-600"
+                    : "bg-gray-50 text-gray-400 hover:text-gray-600"
+                }`}
+              >
+                Multiple Tables
+              </button>
+            </div>
 
-            {origin && (
-              <div className="mx-auto mb-4 inline-block rounded-xl bg-paper p-4">
-                <QRCodeSVG
-                  value={qrUrl(origin, qrModal.tableNumber, qrModal.qrToken)}
-                  size={200}
-                  level="H"
-                  bgColor="#FBF5EC"
-                  fgColor="#0A1124"
+            {addMode === "single" ? (
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-bold text-gray-400">#</span>
+                <input
+                  type="number"
+                  min={1}
+                  value={newTableNum}
+                  onChange={(e) => setNewTableNum(e.target.value)}
+                  placeholder={String(nextTableNum)}
+                  className="w-28 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-base font-bold text-gray-900 placeholder:text-gray-300 focus:border-red-300 focus:ring-2 focus:ring-red-100 outline-none"
                 />
+                <button onClick={handleCreate} className="btn-primary text-sm">
+                  Create
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-wrap items-end gap-4">
+                <div>
+                  <label className="text-xs font-bold text-gray-500 mb-1 block">
+                    Start from #
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={batchStart}
+                    onChange={(e) => setBatchStart(e.target.value)}
+                    placeholder={String(nextTableNum)}
+                    className="w-24 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-base font-bold text-gray-900 placeholder:text-gray-300 focus:border-red-300 focus:ring-2 focus:ring-red-100 outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-bold text-gray-500 mb-1 block">
+                    Count
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    max={500}
+                    value={batchCount}
+                    onChange={(e) => setBatchCount(e.target.value)}
+                    className="w-24 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-base font-bold text-gray-900 placeholder:text-gray-300 focus:border-red-300 focus:ring-2 focus:ring-red-100 outline-none"
+                  />
+                </div>
+                <button
+                  onClick={handleBatchGenerate}
+                  className="btn-primary text-sm"
+                >
+                  Create {batchCount} Tables
+                </button>
               </div>
             )}
+          </div>
+        )}
 
-            <p className="mt-2 break-all font-mono text-xs text-paper/35">
-              {origin
-                ? qrUrl(origin, qrModal.tableNumber, qrModal.qrToken)
-                : "Loading..."}
+        {/* Table Cards Grid — wider */}
+        <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+          {filtered.map((table) => {
+            return (
+              <div
+                key={table.id}
+                className={`group rounded-2xl border p-5 transition-all hover:shadow-md ${
+                  table.isActive
+                    ? "border-gray-200 bg-white hover:border-gray-300"
+                    : "border-red-200 bg-red-50/50 opacity-60"
+                }`}
+              >
+                {/* Header */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2.5">
+                    <Hash size={16} className="text-gray-300" />
+                    <span className="text-xl font-black text-gray-900">
+                      {table.tableNumber}
+                    </span>
+                    {!table.isActive && (
+                      <span className="rounded-lg bg-red-100 px-2 py-0.5 text-[10px] font-black text-red-600">
+                        Inactive
+                      </span>
+                    )}
+                  </div>
+                  <span className="text-xs text-gray-400 bg-gray-50 rounded-lg px-2 py-1">
+                    {table.orders.length} orders
+                  </span>
+                </div>
+
+                {/* Branch name */}
+                <p className="mt-1.5 text-xs text-gray-400">
+                  {table.branch.nameEn}
+                </p>
+
+                {/* Actions */}
+                <div className="mt-4 flex flex-wrap gap-1.5">
+                  <button
+                    onClick={() => setQrModal(table)}
+                    className="flex items-center gap-1.5 rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-600 hover:bg-blue-100 transition-colors"
+                  >
+                    <Eye size={14} />
+                    QR
+                  </button>
+
+                  <button
+                    onClick={() => handleDownloadPDF(table)}
+                    className="flex items-center gap-1.5 rounded-lg bg-gray-50 px-3 py-2 text-xs font-bold text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+                  >
+                    <Download size={14} />
+                    PDF
+                  </button>
+
+                  <button
+                    onClick={() => handlePrintQR(table)}
+                    className="flex items-center gap-1.5 rounded-lg bg-gray-50 px-3 py-2 text-xs font-bold text-gray-500 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+                  >
+                    <Printer size={14} />
+                  </button>
+
+                  <button
+                    onClick={() => handleRegenerateToken(table.id)}
+                    disabled={acting === table.id}
+                    className="flex items-center gap-1.5 rounded-lg bg-amber-50 px-3 py-2 text-xs font-bold text-amber-600 hover:bg-amber-100 transition-colors disabled:opacity-40"
+                  >
+                    <RefreshCw size={14} />
+                  </button>
+
+                  <button
+                    onClick={() => handleToggle(table.id)}
+                    disabled={acting === table.id}
+                    className={`flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-bold transition-colors disabled:opacity-40 ${
+                      table.isActive
+                        ? "bg-gray-50 text-gray-400 hover:bg-red-50 hover:text-red-600"
+                        : "bg-emerald-50 text-emerald-600 hover:bg-emerald-100"
+                    }`}
+                  >
+                    {table.isActive ? (
+                      <>
+                        <PowerOff size={14} />
+                        Off
+                      </>
+                    ) : (
+                      <>
+                        <Power size={14} />
+                        On
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+
+          {filtered.length === 0 && (
+            <p className="col-span-full py-12 text-center text-base text-gray-400">
+              No tables in this branch yet. Use the buttons above to add some.
             </p>
+          )}
+        </div>
 
-            <div className="mt-6 flex gap-3 justify-center">
-              <button
-                onClick={() => handlePrintQR(qrModal)}
-                className="btn-primary text-sm"
-              >
-                <Printer size={14} />
-                Print
-              </button>
-              <button
-                onClick={() => handleDownloadPDF(qrModal)}
-                className="btn-primary text-sm"
-              >
-                <Download size={14} />
-                Download
-              </button>
-              <button
-                onClick={() => setQrModal(null)}
-                className="btn-ghost text-sm"
-              >
-                Close
-              </button>
+        {/* QR View Modal */}
+        {qrModal && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
+            onClick={() => setQrModal(null)}
+          >
+            <div
+              className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-lg font-black text-gray-900">
+                  Table {qrModal.tableNumber}
+                </h3>
+                <button
+                  onClick={() => setQrModal(null)}
+                  className="text-gray-400 hover:text-gray-700"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <p className="text-sm text-gray-500 mb-4">
+                {qrModal.branch.nameEn}
+              </p>
+
+              {origin && (
+                <div className="mx-auto mb-4 inline-block rounded-xl bg-gray-50 p-4 border border-gray-100">
+                  <QRCodeSVG
+                    value={qrUrl(origin, qrModal.tableNumber, qrModal.qrToken)}
+                    size={200}
+                    level="H"
+                    bgColor="#f9fafb"
+                    fgColor="#111827"
+                  />
+                </div>
+              )}
+
+              <p className="mt-2 break-all font-mono text-xs text-gray-400">
+                {origin
+                  ? qrUrl(origin, qrModal.tableNumber, qrModal.qrToken)
+                  : "Loading..."}
+              </p>
+
+              <div className="mt-6 flex gap-3 justify-center">
+                <button
+                  onClick={() => handlePrintQR(qrModal)}
+                  className="btn-primary text-sm"
+                >
+                  <Printer size={14} />
+                  Print
+                </button>
+                <button
+                  onClick={() => handleDownloadPDF(qrModal)}
+                  className="btn-primary text-sm"
+                >
+                  <Download size={14} />
+                  Download
+                </button>
+                <button
+                  onClick={() => setQrModal(null)}
+                  className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-600 shadow-sm transition-all hover:bg-gray-50"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-
+        )}
+      </div>
     </div>
   );
 }

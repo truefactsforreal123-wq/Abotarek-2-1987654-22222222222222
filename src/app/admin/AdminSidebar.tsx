@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 import { signOut } from "@/lib/auth";
+import { useUnseenOrders } from "./UnseenOrdersProvider";
 
 const navLinks = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -32,6 +33,7 @@ const navLinks = [
 export default function AdminSidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
+  const { count: unseenCount } = useUnseenOrders();
 
   const isActive = (href: string) =>
     href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
@@ -41,6 +43,7 @@ export default function AdminSidebar() {
       {navLinks.map((link) => {
         const Icon = link.icon;
         const active = isActive(link.href);
+        const showBadge = link.href === "/admin/orders" && unseenCount > 0;
         return (
           <Link
             key={link.href}
@@ -48,15 +51,20 @@ export default function AdminSidebar() {
             onClick={() => setMobileOpen(false)}
             className={`group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition-all duration-200 ${
               active
-                ? "bg-gradient-to-r from-ember/20 to-ember/5 text-ember shadow-[inset_0_0_20px_rgba(229,50,34,0.06)]"
-                : "text-paper/45 hover:bg-white/[0.04] hover:text-paper/80"
+                ? "bg-red-50 text-red-600"
+                : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
             }`}
           >
             {active && (
-              <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] rounded-full bg-ember" />
+              <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[3px] rounded-full bg-red-500" />
             )}
-            <Icon className={`h-[18px] w-[18px] shrink-0 transition-colors ${active ? "text-ember" : "text-paper/30 group-hover:text-paper/60"}`} />
+            <Icon className={`h-[18px] w-[18px] shrink-0 transition-colors ${active ? "text-red-500" : "text-gray-400 group-hover:text-gray-600"}`} />
             {link.label}
+            {showBadge && (
+              <span className="ml-auto flex h-5 min-w-[20px] items-center justify-center rounded-full bg-red-500 px-1.5 text-[10px] font-bold text-white">
+                {unseenCount > 99 ? "99+" : unseenCount}
+              </span>
+            )}
           </Link>
         );
       })}
@@ -68,13 +76,13 @@ export default function AdminSidebar() {
       {/* Mobile hamburger */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="fixed left-4 top-4 z-50 rounded-xl bg-white/[0.06] backdrop-blur-md p-2.5 text-paper/70 lg:hidden border border-white/[0.08] shadow-lg"
+        className="fixed left-4 top-4 z-50 rounded-xl bg-white p-2.5 text-gray-600 lg:hidden border border-gray-200 shadow-md"
       >
         <Menu className="h-5 w-5" />
       </button>
 
       {/* Desktop sidebar */}
-      <aside className="hidden w-[260px] shrink-0 flex-col border-r border-white/[0.06] bg-gradient-to-b from-[#0c1021] to-[#0a0e1a] lg:flex">
+      <aside className="hidden w-[260px] shrink-0 flex-col border-r border-gray-200 bg-white lg:flex">
         <SidebarInner navContent={navContent} />
       </aside>
 
@@ -86,7 +94,7 @@ export default function AdminSidebar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+              className="fixed inset-0 z-40 bg-black/40 lg:hidden"
               onClick={() => setMobileOpen(false)}
             />
             <motion.aside
@@ -94,11 +102,11 @@ export default function AdminSidebar() {
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-white/[0.06] bg-gradient-to-b from-[#0c1021] to-[#0a0e1a] lg:hidden"
+              className="fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-gray-200 bg-white lg:hidden"
             >
               <button
                 onClick={() => setMobileOpen(false)}
-                className="absolute right-3 top-3 rounded-lg p-1.5 text-paper/50 hover:bg-ink-800 hover:text-paper"
+                className="absolute right-3 top-3 rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -115,27 +123,27 @@ function SidebarInner({ navContent }: { navContent: React.ReactNode }) {
   return (
     <>
       {/* Brand */}
-      <div className="flex items-center gap-3 border-b border-white/[0.06] px-5 py-5">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-ember to-ember-dark text-sm font-black text-paper shadow-lg shadow-ember/20">
+      <div className="flex items-center gap-3 border-b border-gray-100 px-5 py-5">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-ember to-ember-dark text-sm font-black text-white shadow-lg shadow-ember/20">
           AT
         </div>
         <div className="flex flex-col">
-          <span className="text-sm font-extrabold tracking-wide text-paper">
+          <span className="text-sm font-extrabold tracking-wide text-gray-900">
             أبو طارق
           </span>
-          <span className="text-[11px] text-paper/35 font-medium">Admin Panel</span>
+          <span className="text-[11px] text-gray-400 font-medium">Admin Panel</span>
         </div>
       </div>
 
       {navContent}
 
       {/* Footer actions */}
-      <div className="mt-auto border-t border-white/[0.06] p-3 space-y-0.5">
+      <div className="mt-auto border-t border-gray-100 p-3 space-y-0.5">
         <a
           href="/"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-paper/40 transition-all hover:bg-white/[0.04] hover:text-paper/70"
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-400 transition-all hover:bg-gray-50 hover:text-gray-700"
         >
           <ExternalLink className="h-[18px] w-[18px]" />
           View Site
@@ -143,7 +151,7 @@ function SidebarInner({ navContent }: { navContent: React.ReactNode }) {
         <form action={signOut}>
           <button
             type="submit"
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-paper/40 transition-all hover:bg-ember/10 hover:text-ember"
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-400 transition-all hover:bg-red-50 hover:text-red-600"
           >
             <LogOut className="h-[18px] w-[18px]" />
             Logout
