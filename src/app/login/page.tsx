@@ -37,30 +37,25 @@ export default function AdminLoginPage() {
   return (
     <div className="flex min-h-screen">
       {/* Left — brand panel */}
-      <div className="relative hidden w-1/2 items-center justify-center bg-ink-950 lg:flex">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(74,108,247,0.08)_0%,transparent_70%)]" />
-        <div className="relative z-10 flex flex-col items-center gap-6 px-12 text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-tomato-600 text-2xl font-black text-paper shadow-lg shadow-tomato-600/25">
-            AT
-          </div>
-          <h2 className="text-3xl font-extrabold text-paper">
+      <div className="relative hidden w-1/2 items-center justify-center bg-ink-950 lg:flex overflow-hidden">
+        <img
+          src="/images/founder.jpg"
+          alt="Abo Tarek Founder"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/60 to-transparent" />
+        <div className="relative z-10 flex flex-col items-center gap-4 px-12 text-center mt-auto pb-16">
+          <h2 className="text-3xl font-extrabold text-paper drop-shadow-lg">
             أبو طارق — ملك الكشري
           </h2>
-          <p className="max-w-sm text-base leading-relaxed text-paper/50">
+          <p className="max-w-sm text-base leading-relaxed text-paper/70 drop-shadow">
             The original Abo Tarek Koshari since 1950 — one branch only,
             Downtown Cairo.
           </p>
-          <div className="mt-4 rounded-xl border border-ink-700 bg-ink-900/60 px-6 py-4">
-            <p className="text-sm italic text-paper/40">
+          <div className="mt-4 rounded-xl border border-paper/20 bg-black/40 backdrop-blur-sm px-6 py-4">
+            <p className="text-sm italic text-paper/70">
               &ldquo;الكشري مش بس أكل… ده ثقافة&rdquo;
             </p>
-          </div>
-          <div className="hidden lg:block mt-6">
-            <img
-              src="/images/founder.jpg"
-              alt="Abo Tarek Founder"
-              className="h-48 w-48 rounded-2xl object-cover shadow-2xl shadow-black/40 ring-2 ring-ink-700"
-            />
           </div>
         </div>
       </div>
