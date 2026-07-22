@@ -58,14 +58,14 @@ export function ReviewsClient({
         </div>
 
         {/* Stat Cards */}
-        <div className="flex gap-4 mb-6">
-          <div className="rounded-2xl border border-gray-200 bg-white px-6 py-4 shadow-sm">
+        <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="rounded-2xl border border-gray-200 bg-white px-8 py-5 shadow-sm">
             <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Approved</p>
-            <p className="text-3xl font-extrabold text-emerald-600 mt-1">{approvedCount}</p>
+            <p className="text-4xl font-extrabold text-emerald-600 mt-1">{approvedCount}</p>
           </div>
-          <div className="rounded-2xl border border-gray-200 bg-white px-6 py-4 shadow-sm">
+          <div className="rounded-2xl border border-gray-200 bg-white px-8 py-5 shadow-sm">
             <p className="text-xs text-gray-500 font-semibold uppercase tracking-wider">Pending</p>
-            <p className="text-3xl font-extrabold text-amber-600 mt-1">{pendingCount}</p>
+            <p className="text-4xl font-extrabold text-amber-600 mt-1">{pendingCount}</p>
           </div>
         </div>
 

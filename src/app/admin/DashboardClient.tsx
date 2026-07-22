@@ -116,48 +116,23 @@ export function DashboardClient({ data }: { data: DashboardData }) {
         </header>
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Hero card — today's orders */}
-          {statCards.filter(c => c.large).map((card, i) => (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {statCards.map((card, i) => (
             <motion.div
               key={card.key}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:col-span-2 lg:col-span-2"
+              className="relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
             >
               <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} pointer-events-none`} />
               <div className="relative flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-semibold text-gray-500">{card.label}</p>
-                  <p className={`mt-2 text-5xl font-extrabold tracking-tight ${card.accent}`}>
-                    {card.getData(data)}
-                  </p>
-                </div>
-                <div className={`flex h-14 w-14 items-center justify-center rounded-2xl ${card.iconBg}`}>
-                  <card.icon size={26} />
-                </div>
-              </div>
-            </motion.div>
-          ))}
-
-          {/* Smaller cards */}
-          {statCards.filter(c => !c.large).map((card, i) => (
-            <motion.div
-              key={card.key}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: (i + 2) * 0.06, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"
-            >
-              <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} pointer-events-none`} />
-              <div className="relative flex items-center justify-between">
-                <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${card.iconBg}`}>
-                  <card.icon size={20} />
-                </div>
-                <span className="text-2xl font-extrabold text-gray-900">
+                <span className="text-4xl font-extrabold tracking-tight text-gray-900">
                   {card.getData(data)}
                 </span>
+                <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${card.iconBg}`}>
+                  <card.icon size={24} />
+                </div>
               </div>
               <p className="relative mt-3 text-sm font-semibold text-gray-500">
                 {card.label}
