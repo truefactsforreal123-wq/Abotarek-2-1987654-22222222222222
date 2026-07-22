@@ -19,6 +19,7 @@ import {
   CalendarDays,
   BarChart3,
 } from "lucide-react";
+import { useAdminI18n } from "@/lib/admin-i18n";
 
 interface OrderItem {
   id: string;
@@ -92,30 +93,35 @@ export function OrdersDashboard({
   const [lastFetchedDate, setLastFetchedDate] = useState<string | null>(null);
   const summaryFetchId = useRef(0);
   const summaryLoading = tab === "summary" && lastFetchedDate !== summaryDate;
+  const { lang, t } = useAdminI18n();
 
-  const itemName = useCallback((item: OrderItem) => item.menuItem.nameEn, []);
+  const itemName = useCallback((item: OrderItem) => lang === "ar" ? item.menuItem.nameAr : item.menuItem.nameEn, [lang]);
 
   const STATUS_LABELS: Record<
     string,
-    { label: string; color: string; icon: React.ReactNode }
+    { labelAr: string; labelEn: string; color: string; icon: React.ReactNode }
   > = {
     submitted: {
-      label: "New",
+      labelAr: "جديد",
+      labelEn: "New",
       color: "bg-blue-50 text-blue-600 border border-blue-200",
       icon: <Bell size={12} className="mr-1" />,
     },
     preparing: {
-      label: "Preparing",
+      labelAr: "يُحضّر",
+      labelEn: "Preparing",
       color: "bg-amber-50 text-amber-600 border border-amber-200",
       icon: <ChefHat size={12} className="mr-1" />,
     },
     ready: {
-      label: "Ready",
+      labelAr: "جاهز",
+      labelEn: "Ready",
       color: "bg-emerald-50 text-emerald-600 border border-emerald-200",
       icon: <PackageCheck size={12} className="mr-1" />,
     },
     served: {
-      label: "Served",
+      labelAr: "تم التقديم",
+      labelEn: "Served",
       color: "bg-gray-100 text-gray-500",
       icon: null,
     },
@@ -142,7 +148,7 @@ export function OrdersDashboard({
     const diff = Math.floor(
       (Date.now() - new Date(dateStr).getTime()) / 60000
     );
-    if (diff < 1) return "Just now";
+    if (diff < 1) return t("now");
     if (diff < 60) return `${diff}m`;
     const hours = Math.floor(diff / 60);
     if (hours < 24) return `${hours}h ${diff % 60}m`;
@@ -235,21 +241,22 @@ export function OrdersDashboard({
     () =>
       filteredActive.reduce(
         (acc, order) => {
-          const key = `Table ${order.table.tableNumber} — ${order.table.branch.nameEn}`;
+          const branchName = lang === "ar" ? order.table.branch.nameAr : order.table.branch.nameEn;
+          const key = `${t("table")} ${order.table.tableNumber} — ${branchName}`;
           if (!acc[key]) acc[key] = [];
           acc[key].push(order);
           return acc;
         },
         {} as Record<string, OrderWithRelations[]>
       ),
-    [filteredActive]
+    [filteredActive, lang, t]
   );
 
   return (
-    <div>
+    <div dir={lang === "ar" ? "rtl" : "ltr"}>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl font-black text-gray-900">Orders</h1>
+        <h1 className="text-2xl font-black text-gray-900">{t("ordersTitle")}</h1>
       </div>
 
       {/* Tabs + Filter */}
@@ -264,7 +271,7 @@ export function OrdersDashboard({
             }`}
           >
             <Bell size={18} />
-            Active Orders ({filteredActive.length})
+            {t("activeOrders")} ({filteredActive.length})
           </button>
           <button
             onClick={() => setTab("history")}
@@ -275,7 +282,7 @@ export function OrdersDashboard({
             }`}
           >
             <History size={18} />
-            History ({filteredServed.length})
+            {t("history")} ({filteredServed.length})
           </button>
           <button
             onClick={() => setTab("summary")}
@@ -286,7 +293,7 @@ export function OrdersDashboard({
             }`}
           >
             <BarChart3 size={18} />
-            Summary
+            {t("summary")}
           </button>
         </div>
 
@@ -296,10 +303,10 @@ export function OrdersDashboard({
             onChange={(e) => setBranchFilter(e.target.value)}
             className="rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm font-bold text-gray-900 shadow-sm"
           >
-            <option value="all">All Branches</option>
+            <option value="all">{t("allBranches")}</option>
             {allBranches.map((b) => (
               <option key={b.id} value={b.nameEn}>
-                {b.nameEn}
+                {lang === "ar" ? b.nameAr : b.nameEn}
               </option>
             ))}
           </select>
@@ -312,10 +319,10 @@ export function OrdersDashboard({
           {Object.keys(groupedActive).length === 0 && (
             <div className="rounded-2xl border border-dashed border-gray-300 p-12 text-center">
               <p className="text-gray-400 text-base font-bold">
-                No active orders
+                {t("noActiveOrdersMsg")}
               </p>
               <p className="mt-1 text-sm text-gray-300">
-                New orders will appear here in real time
+                {t("newOrdersAppear")}
               </p>
             </div>
           )}
@@ -357,7 +364,7 @@ export function OrdersDashboard({
                             </span>
                           </div>
                           <span className="text-xl font-black text-amber-600">
-                            {total} LE
+                            {total} {t("le")}
                           </span>
                         </div>
 
@@ -366,7 +373,7 @@ export function OrdersDashboard({
                             className={`inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-black ${statusInfo.color}`}
                           >
                             {statusInfo.icon}
-                            {statusInfo.label}
+                            {lang === "ar" ? statusInfo.labelAr : statusInfo.labelEn}
                           </span>
                         </div>
 
@@ -416,7 +423,7 @@ export function OrdersDashboard({
                                 )}
                               </div>
                               <span className="text-gray-500 shrink-0 ml-2 font-bold text-sm">
-                                {Number(item.priceAtOrder)} LE
+                                {Number(item.priceAtOrder)} {t("le")}
                               </span>
                             </div>
                           ))}
@@ -434,7 +441,7 @@ export function OrdersDashboard({
                               className="flex items-center gap-1.5 rounded-xl bg-amber-50 px-3 py-2 text-sm font-bold text-amber-600 hover:bg-amber-100 transition-colors disabled:opacity-40 min-h-[44px]"
                             >
                               <ChefHat size={16} />
-                              {acting === order.id ? "..." : "Preparing"}
+                              {acting === order.id ? "..." : lang === "ar" ? "يُحضّر" : "Preparing"}
                             </button>
                           )}
                           {order.status === "preparing" && (
@@ -448,7 +455,7 @@ export function OrdersDashboard({
                               className="flex items-center gap-1.5 rounded-xl bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-600 hover:bg-emerald-100 transition-colors disabled:opacity-40 min-h-[44px]"
                             >
                               <PackageCheck size={16} />
-                              {acting === order.id ? "..." : "Ready"}
+                              {acting === order.id ? "..." : lang === "ar" ? "جاهز" : "Ready"}
                             </button>
                           )}
                           {(order.status === "submitted" ||
@@ -464,7 +471,7 @@ export function OrdersDashboard({
                               className="flex items-center gap-1.5 rounded-xl bg-blue-50 px-3 py-2 text-sm font-bold text-blue-600 hover:bg-blue-100 transition-colors disabled:opacity-40 min-h-[44px]"
                             >
                               <CheckCircle2 size={16} />
-                              {acting === order.id ? "..." : "Served"}
+                              {acting === order.id ? "..." : lang === "ar" ? "تم التقديم" : "Served"}
                             </button>
                           )}
                           <button
@@ -472,7 +479,7 @@ export function OrdersDashboard({
                             disabled={acting === order.id}
                             className="flex items-center gap-1.5 rounded-xl bg-red-50 px-3 py-2 text-sm font-bold text-red-600 hover:bg-red-100 transition-colors disabled:opacity-40 min-h-[44px]"
                           >
-                            {acting === order.id ? "..." : "Delete"}
+                            {acting === order.id ? "..." : lang === "ar" ? "حذف" : "Delete"}
                           </button>
                         </div>
                       </div>
@@ -490,10 +497,10 @@ export function OrdersDashboard({
           {filteredServed.length === 0 && (
             <div className="rounded-2xl border border-dashed border-gray-300 p-12 text-center">
               <p className="text-gray-400 text-base font-bold">
-                No served orders yet
+                {t("noServedOrders")}
               </p>
               <p className="mt-1 text-sm text-gray-300">
-                Served orders auto-delete after {historyTTL} hours
+                {t("servedAutoDelete")} {historyTTL} {t("hours")}
               </p>
             </div>
           )}
@@ -511,8 +518,8 @@ export function OrdersDashboard({
                   <div className="flex items-center gap-2 mb-2">
                     <CheckCircle2 size={16} className="text-emerald-600" />
                     <span className="text-sm font-bold text-emerald-600">
-                      Table {order.table.tableNumber} —{" "}
-                      {order.table.branch.nameEn}
+                      {t("table")} {order.table.tableNumber} —{" "}
+                      {lang === "ar" ? order.table.branch.nameAr : order.table.branch.nameEn}
                     </span>
                     <span className="text-sm text-gray-400">
                       {getTimeAgo(order.servedAt)}
@@ -543,21 +550,21 @@ export function OrdersDashboard({
                           </span>
                         </div>
                         <span className="text-gray-400 shrink-0 ml-2 text-sm">
-                          {Number(item.priceAtOrder)} LE
+                          {Number(item.priceAtOrder)} {t("le")}
                         </span>
                       </div>
                     ))}
                   </div>
                   <div className="mt-2 flex items-center justify-between">
                     <span className="text-base font-bold text-amber-600">
-                      {total} LE
+                      {total} {t("le")}
                     </span>
                     <button
                       onClick={() => handleDelete(order.id)}
                       disabled={acting === order.id}
                       className="text-xs font-bold text-red-400 hover:text-red-600 transition-colors disabled:opacity-40"
                     >
-                      {acting === order.id ? "..." : "Delete"}
+                      {acting === order.id ? "..." : lang === "ar" ? "حذف" : "Delete"}
                     </button>
                   </div>
                 </div>
@@ -580,44 +587,44 @@ export function OrdersDashboard({
               onChange={(e) => setSummaryDate(e.target.value)}
               className="rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-base font-bold text-gray-900 shadow-sm"
             />
-            {summaryDate === todayStr ? (
+                {summaryDate === todayStr ? (
               <span className="rounded-xl bg-emerald-50 px-3 py-1.5 text-sm font-bold text-emerald-600">
-                Today
+                {t("today")}
               </span>
             ) : (
               <button
                 onClick={() => setSummaryDate(todayStr)}
                 className="rounded-xl bg-gray-100 px-3 py-1.5 text-sm font-bold text-gray-600 hover:text-gray-900 transition-colors"
               >
-                Back to Today
+                {t("backToToday")}
               </button>
             )}
           </div>
 
           {summaryLoading ? (
             <div className="rounded-2xl border border-gray-200 bg-white p-12 text-center shadow-sm">
-              <p className="text-base text-gray-400">Loading...</p>
+              <p className="text-base text-gray-400">{t("loading")}</p>
             </div>
           ) : summaryData ? (
             <>
               {/* Stats Cards */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
                 <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-                  <p className="text-sm text-gray-500 uppercase">Orders</p>
+                  <p className="text-sm text-gray-500 uppercase">{t("orders")}</p>
                   <p className="text-4xl font-black text-gray-900 mt-1">
                     {summaryData.totalOrders}
                   </p>
                 </div>
                 <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-                  <p className="text-sm text-gray-500 uppercase">Revenue</p>
+                  <p className="text-sm text-gray-500 uppercase">{t("revenue")}</p>
                   <p className="text-4xl font-black text-amber-600 mt-1">
                     {summaryData.totalRevenue}{" "}
-                    <span className="text-lg">LE</span>
+                    <span className="text-lg">{t("le")}</span>
                   </p>
                 </div>
                 <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                   <p className="text-sm text-gray-500 uppercase">
-                    Items Sold
+                    {t("itemsSold")}
                   </p>
                   <p className="text-4xl font-black text-gray-900 mt-1">
                     {summaryData.itemsSold}
@@ -625,7 +632,7 @@ export function OrdersDashboard({
                 </div>
                 <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                   <p className="text-sm text-gray-500 uppercase">
-                    Avg Order
+                    {t("avgOrder")}
                   </p>
                   <p className="text-4xl font-black text-gray-900 mt-1">
                     {summaryData.totalOrders > 0
@@ -633,7 +640,7 @@ export function OrdersDashboard({
                           summaryData.totalRevenue / summaryData.totalOrders
                         )
                       : 0}{" "}
-                    <span className="text-lg">LE</span>
+                    <span className="text-lg">{t("le")}</span>
                   </p>
                 </div>
               </div>
@@ -643,7 +650,7 @@ export function OrdersDashboard({
                 {summaryData.topItems.length > 0 && (
                   <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                     <h3 className="text-base font-black text-gray-500 uppercase mb-4">
-                      Top Selling Items
+                      {t("topSellingItems")}
                     </h3>
                     <div className="space-y-2">
                       {summaryData.topItems.map((item, idx) => (
@@ -656,7 +663,7 @@ export function OrdersDashboard({
                               #{idx + 1}
                             </span>
                             <span className="text-base font-bold text-gray-900">
-                              {item.nameEn}
+                              {lang === "ar" ? item.nameAr : item.nameEn}
                             </span>
                           </div>
                           <div className="flex items-center gap-4">
@@ -664,7 +671,7 @@ export function OrdersDashboard({
                               x{item.quantity}
                             </span>
                             <span className="text-base font-bold text-amber-600">
-                              {item.revenue} LE
+                              {item.revenue} {t("le")}
                             </span>
                           </div>
                         </div>
@@ -677,7 +684,7 @@ export function OrdersDashboard({
                 {summaryData.branchStats.length > 0 && (
                   <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
                     <h3 className="text-base font-black text-gray-500 uppercase mb-4">
-                      Orders by Branch
+                      {t("ordersByBranch")}
                     </h3>
                     <div className="space-y-2">
                       {summaryData.branchStats.map((branch, idx) => (
@@ -686,14 +693,14 @@ export function OrdersDashboard({
                           className="flex items-center justify-between rounded-xl bg-gray-50 px-4 py-2.5"
                         >
                           <span className="text-base font-bold text-gray-900">
-                            {branch.nameEn}
+                            {lang === "ar" ? branch.nameAr : branch.nameEn}
                           </span>
                           <div className="flex items-center gap-4">
                             <span className="text-sm text-gray-500">
-                              {branch.count} orders
+                              {branch.count} {t("orders")}
                             </span>
                             <span className="text-base font-bold text-amber-600">
-                              {branch.revenue} LE
+                              {branch.revenue} {t("le")}
                             </span>
                           </div>
                         </div>
@@ -706,7 +713,7 @@ export function OrdersDashboard({
               {summaryData.totalOrders === 0 && (
                 <div className="rounded-2xl border border-dashed border-gray-300 p-12 text-center">
                   <p className="text-gray-400 text-base font-bold">
-                    No orders on this day
+                    {t("noOrdersDay")}
                   </p>
                 </div>
               )}

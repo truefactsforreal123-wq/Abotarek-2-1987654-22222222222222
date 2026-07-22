@@ -11,6 +11,8 @@ import {
   Star,
 } from "lucide-react";
 import Link from "next/link";
+import { useAdminI18n } from "@/lib/admin-i18n";
+import type { AdminTranslationKey } from "@/lib/locales/en";
 
 type OrderItem = {
   quantity: number;
@@ -38,80 +40,73 @@ interface DashboardData {
   recentOrders: RecentOrder[];
 }
 
-const statCards = [
-  {
-    key: "todayOrders",
-    label: "Today's Orders",
-    icon: ShoppingBag,
-    gradient: "from-red-50 via-transparent to-transparent",
-    iconBg: "bg-red-50 text-red-500",
-    accent: "text-red-600",
-    getData: (d: DashboardData) => d.todayOrderCount,
-    large: true,
-  },
-  {
-    key: "menuItems",
-    label: "Menu Items",
-    icon: UtensilsCrossed,
-    gradient: "from-blue-50 via-transparent to-transparent",
-    iconBg: "bg-blue-50 text-blue-600",
-    accent: "text-blue-600",
-    getData: (d: DashboardData) => d.menuItemCount,
-    large: false,
-  },
-  {
-    key: "activeTables",
-    label: "Active Tables",
-    icon: LayoutGrid,
-    gradient: "from-amber-50 via-transparent to-transparent",
-    iconBg: "bg-amber-50 text-amber-600",
-    accent: "text-amber-600",
-    getData: (d: DashboardData) => d.tableCount,
-    large: false,
-  },
-  {
-    key: "branches",
-    label: "Branches",
-    icon: Building2,
-    gradient: "from-emerald-50 via-transparent to-transparent",
-    iconBg: "bg-emerald-50 text-emerald-600",
-    accent: "text-emerald-600",
-    getData: (d: DashboardData) => d.branchCount,
-    large: false,
-  },
-];
-
-const statusBadge: Record<string, { bg: string; text: string; label: string }> = {
-  submitted: { bg: "bg-blue-50", text: "text-blue-600", label: "New" },
-  preparing: { bg: "bg-amber-50", text: "text-amber-600", label: "Preparing" },
-  ready: { bg: "bg-emerald-50", text: "text-emerald-600", label: "Ready" },
-  served: { bg: "bg-gray-50", text: "text-gray-400", label: "Served" },
+const statusBadge: Record<string, { bg: string; text: string; labelAr: string; labelEn: string }> = {
+  submitted: { bg: "bg-blue-50", text: "text-blue-600", labelAr: "جديد", labelEn: "New" },
+  preparing: { bg: "bg-amber-50", text: "text-amber-600", labelAr: "يُحضّر", labelEn: "Preparing" },
+  ready: { bg: "bg-emerald-50", text: "text-emerald-600", labelAr: "جاهز", labelEn: "Ready" },
+  served: { bg: "bg-gray-50", text: "text-gray-400", labelAr: "تم التقديم", labelEn: "Served" },
 };
 
-function timeAgo(dateStr: string | null) {
+function timeAgo(dateStr: string | null, t: (k: AdminTranslationKey) => string) {
   if (!dateStr) return "—";
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "Just now";
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 1) return t("now");
+  if (mins < 60) return `${mins}د`;
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  return `${Math.floor(hrs / 24)}d ago`;
+  if (hrs < 24) return `${hrs}س`;
+  return `${Math.floor(hrs / 24)}ي`;
 }
 
 export function DashboardClient({ data }: { data: DashboardData }) {
+  const { lang, t } = useAdminI18n();
   const orderTotal = (items: OrderItem[]) =>
     items.reduce((sum, i) => sum + Number(i.priceAtOrder) * i.quantity, 0);
 
+  const statCards = [
+    {
+      key: "todayOrders",
+      label: t("todayOrders"),
+      icon: ShoppingBag,
+      gradient: "from-red-50 via-transparent to-transparent",
+      iconBg: "bg-red-50 text-red-500",
+      getData: (d: DashboardData) => d.todayOrderCount,
+    },
+    {
+      key: "menuItems",
+      label: t("menuItems"),
+      icon: UtensilsCrossed,
+      gradient: "from-blue-50 via-transparent to-transparent",
+      iconBg: "bg-blue-50 text-blue-600",
+      getData: (d: DashboardData) => d.menuItemCount,
+    },
+    {
+      key: "activeTables",
+      label: t("activeTables"),
+      icon: LayoutGrid,
+      gradient: "from-amber-50 via-transparent to-transparent",
+      iconBg: "bg-amber-50 text-amber-600",
+      getData: (d: DashboardData) => d.tableCount,
+    },
+    {
+      key: "branches",
+      label: t("branchesLabel"),
+      icon: Building2,
+      gradient: "from-emerald-50 via-transparent to-transparent",
+      iconBg: "bg-emerald-50 text-emerald-600",
+      getData: (d: DashboardData) => d.branchCount,
+    },
+  ];
+
   return (
-    <div className="min-h-full">
+    <div className="min-h-full" dir={lang === "ar" ? "rtl" : "ltr"}>
       <div className="mx-auto max-w-[1400px]">
         <header className="mb-8">
           <h1 className="text-2xl font-extrabold text-gray-900 tracking-tight">
-            Dashboard
+            {t("dashboard")}
           </h1>
           <p className="mt-1.5 text-sm text-gray-500">
-            Welcome back — here&apos;s what&apos;s happening today.
+            {t("welcomeBack")}
           </p>
         </header>
 
@@ -144,10 +139,10 @@ export function DashboardClient({ data }: { data: DashboardData }) {
         {/* Quick Actions */}
         <div className="mt-5 flex flex-wrap gap-2.5">
           {[
-            { href: "/admin/menu", icon: UtensilsCrossed, label: "Menu" },
-            { href: "/admin/tables", icon: LayoutGrid, label: "Tables" },
-            { href: "/admin/settings", icon: ClipboardList, label: "Settings" },
-            { href: "/admin/reviews", icon: Star, label: "Reviews" },
+            { href: "/admin/menu", icon: UtensilsCrossed, label: t("menu") },
+            { href: "/admin/tables", icon: LayoutGrid, label: t("tables") },
+            { href: "/admin/settings", icon: ClipboardList, label: t("settings") },
+            { href: "/admin/reviews", icon: Star, label: t("reviews") },
           ].map((action) => (
             <Link
               key={action.href}
@@ -162,12 +157,12 @@ export function DashboardClient({ data }: { data: DashboardData }) {
         {/* Recent Orders */}
         <div className="mt-6 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
           <div className="flex items-center justify-between border-b border-gray-100 px-6 py-4">
-            <h2 className="text-sm font-bold text-gray-700 uppercase tracking-wider">Recent Orders</h2>
+            <h2 className="text-sm font-bold text-gray-700 uppercase tracking-wider">{t("recentOrders")}</h2>
             <Link
               href="/admin/orders"
               className="flex items-center gap-1 text-sm font-semibold text-red-600 hover:text-red-700 transition-colors"
             >
-              View all <ArrowRight size={14} />
+              {t("viewAll")} <ArrowRight size={14} />
             </Link>
           </div>
 
@@ -176,7 +171,7 @@ export function DashboardClient({ data }: { data: DashboardData }) {
               <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gray-50 mb-3">
                 <ShoppingBag size={20} className="text-gray-300" />
               </div>
-              <p className="text-sm text-gray-400">No active orders right now.</p>
+              <p className="text-sm text-gray-400">{t("noActiveOrders")}</p>
             </div>
           ) : (
             <div className="divide-y divide-gray-100">
@@ -190,32 +185,32 @@ export function DashboardClient({ data }: { data: DashboardData }) {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2.5">
                         <span className="font-bold text-gray-900 text-sm">
-                          Table {order.table.tableNumber}
+                          {t("tables")} {order.table.tableNumber}
                         </span>
                         <span className="text-xs text-gray-400">
-                          {order.table.branch.nameEn}
+                          {lang === "ar" ? order.table.branch.nameAr : order.table.branch.nameEn}
                         </span>
                         <span
                           className={`rounded-lg px-2 py-0.5 text-[11px] font-bold ${badge.bg} ${badge.text}`}
                         >
-                          {badge.label}
+                          {lang === "ar" ? badge.labelAr : badge.labelEn}
                         </span>
                       </div>
                       <p className="mt-1 truncate text-xs text-gray-500">
                         {order.items
                           .map(
                             (i) =>
-                              `${i.menuItem.nameAr} x${i.quantity}`,
+                              `${lang === "ar" ? i.menuItem.nameAr : i.menuItem.nameEn} x${i.quantity}`,
                           )
                           .join(", ")}
                       </p>
                     </div>
                     <div className="text-right shrink-0">
                       <p className="font-extrabold text-sm text-gray-900">
-                        EGP {orderTotal(order.items).toFixed(0)}
+                        {orderTotal(order.items).toFixed(0)} {t("le")}
                       </p>
                       <p className="mt-0.5 text-[11px] text-gray-400">
-                        {timeAgo(order.submittedAt)}
+                        {timeAgo(order.submittedAt, t)}
                       </p>
                     </div>
                   </div>

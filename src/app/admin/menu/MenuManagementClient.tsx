@@ -19,6 +19,7 @@ import {
   deleteMenuItem,
   toggleMenuItemAvailability,
 } from "@/lib/actions";
+import { useAdminI18n } from "@/lib/admin-i18n";
 
 type MenuItem = {
   id: number;
@@ -66,6 +67,7 @@ export function MenuManagementClient({ categories }: Props) {
   const [form, setForm] = useState(emptyForm);
   const [deleting, setDeleting] = useState<number | null>(null);
   const [pending, startTransition] = useTransition();
+  const { lang, t } = useAdminI18n();
 
   const allItems = useMemo(
     () => categories.flatMap((c) => c.items.map((i) => ({ ...i, categoryNameAr: c.nameAr, categoryNameEn: c.nameEn }))),
@@ -153,20 +155,20 @@ export function MenuManagementClient({ categories }: Props) {
   }
 
   return (
-    <div className="min-h-full">
+    <div className="min-h-full" dir={lang === "ar" ? "rtl" : "ltr"}>
       <div className="mx-auto max-w-6xl space-y-5">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-extrabold text-gray-900">
-              Menu Management
+              {t("menuManagement")}
             </h1>
             <p className="mt-1 text-sm text-gray-500">
-              {allItems.length} items across {categories.length} categories
+              {allItems.length} {t("itemsAcross")} {categories.length} {t("categories")}
             </p>
           </div>
           <button onClick={openCreate} className="btn-primary text-sm">
-            <Plus size={18} /> Add Item
+            <Plus size={18} /> {t("addItem")}
           </button>
         </div>
 
@@ -179,7 +181,7 @@ export function MenuManagementClient({ categories }: Props) {
             />
             <input
               type="text"
-              placeholder="Search menu items..."
+              placeholder={t("searchMenuItems")}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-red-300 focus:outline-none focus:ring-2 focus:ring-red-100"
@@ -195,7 +197,7 @@ export function MenuManagementClient({ categories }: Props) {
                   : "bg-gray-100 text-gray-500 hover:text-gray-700"
               }`}
             >
-              All ({allItems.length})
+              {t("all")} ({allItems.length})
             </button>
             {categories.map((cat) => (
               <button
@@ -207,7 +209,7 @@ export function MenuManagementClient({ categories }: Props) {
                     : "bg-gray-100 text-gray-500 hover:text-gray-700"
                 }`}
               >
-                {cat.nameEn} ({cat.items.length})
+                {lang === "ar" ? cat.nameAr : cat.nameEn} ({cat.items.length})
               </button>
             ))}
           </div>
@@ -218,16 +220,16 @@ export function MenuManagementClient({ categories }: Props) {
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-gray-100 bg-gray-50">
-                <th className="px-4 py-3 font-bold text-gray-900">Item</th>
+                <th className="px-4 py-3 font-bold text-gray-900">{t("item")}</th>
                 <th className="px-4 py-3 font-bold text-gray-900 hidden md:table-cell">
-                  Category
+                  {t("category")}
                 </th>
-                <th className="px-4 py-3 font-bold text-gray-900">Price</th>
+                <th className="px-4 py-3 font-bold text-gray-900">{t("price")}</th>
                 <th className="px-4 py-3 font-bold text-gray-900 hidden sm:table-cell">
-                  Status
+                  {t("status")}
                 </th>
                 <th className="px-4 py-3 font-bold text-gray-900 text-right">
-                  Actions
+                  {t("actions")}
                 </th>
               </tr>
             </thead>
@@ -238,7 +240,7 @@ export function MenuManagementClient({ categories }: Props) {
                     colSpan={5}
                     className="px-4 py-12 text-center text-gray-400"
                   >
-                    No menu items found.
+                    {t("noMenuItems")}
                   </td>
                 </tr>
               ) : (
@@ -268,10 +270,10 @@ export function MenuManagementClient({ categories }: Props) {
                         </div>
                         <div className="min-w-0">
                           <p className="font-bold text-gray-900 truncate">
-                            {item.nameAr}
+                            {lang === "ar" ? item.nameAr : item.nameEn}
                           </p>
                           <p className="text-xs text-gray-400 truncate">
-                            {item.nameEn}
+                            {lang === "ar" ? item.nameEn : item.nameAr}
                           </p>
                         </div>
                         {item.badge && (
@@ -283,11 +285,11 @@ export function MenuManagementClient({ categories }: Props) {
                     </td>
                     <td className="px-4 py-3 hidden md:table-cell">
                       <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-600">
-                        {item.categoryNameEn}
+                        {lang === "ar" ? item.categoryNameAr : item.categoryNameEn}
                       </span>
                     </td>
                     <td className="px-4 py-3 font-bold text-gray-900">
-                      {item.price ? `EGP ${item.price}` : "—"}
+                      {item.price ? `${t("le")} ${item.price}` : "—"}
                     </td>
                     <td className="px-4 py-3 hidden sm:table-cell">
                       <button
@@ -304,7 +306,7 @@ export function MenuManagementClient({ categories }: Props) {
                         ) : (
                           <EyeOff size={12} />
                         )}
-                        {item.available ? "Active" : "Hidden"}
+                        {item.available ? t("active") : t("hidden")}
                       </button>
                     </td>
                     <td className="px-4 py-3 text-right">
@@ -312,14 +314,14 @@ export function MenuManagementClient({ categories }: Props) {
                         <button
                           onClick={() => openEdit(item)}
                           className="rounded-lg p-1.5 text-blue-600 hover:bg-blue-50"
-                          title="Edit"
+                          title={t("edit")}
                         >
                           <Pencil size={15} />
                         </button>
                         <button
                           onClick={() => handleDelete(item.id)}
                           className="rounded-lg p-1.5 text-red-600 hover:bg-red-50"
-                          title="Delete"
+                          title={t("delete")}
                         >
                           <Trash2 size={15} />
                         </button>
@@ -348,18 +350,17 @@ export function MenuManagementClient({ categories }: Props) {
                 className="mx-4 w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-6 shadow-xl"
               >
                 <h3 className="text-lg font-bold text-gray-900">
-                  Delete item?
+                  {t("deleteItem")}
                 </h3>
                 <p className="mt-2 text-sm text-gray-500">
-                  This action cannot be undone. The item will be permanently
-                  removed from the menu.
+                  {t("deleteConfirm")}
                 </p>
                 <div className="mt-6 flex justify-end gap-2">
                   <button
                     onClick={() => setDeleting(null)}
                     className="btn-ghost text-sm"
                   >
-                    Cancel
+                    {t("cancel")}
                   </button>
                   <button
                     onClick={() => confirmDelete(deleting)}
@@ -371,7 +372,7 @@ export function MenuManagementClient({ categories }: Props) {
                     ) : (
                       <Trash2 size={16} />
                     )}
-                    Delete
+                    {t("delete")}
                   </button>
                 </div>
               </motion.div>
@@ -396,7 +397,7 @@ export function MenuManagementClient({ categories }: Props) {
               >
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-bold text-gray-900">
-                    {editingId ? "Edit Item" : "Add New Item"}
+                    {editingId ? t("editItem") : t("addNewItem")}
                   </h3>
                   <button
                     onClick={() => {
@@ -412,7 +413,7 @@ export function MenuManagementClient({ categories }: Props) {
                 <form onSubmit={handleSubmit} className="mt-5 space-y-4">
                   <div>
                     <label className="mb-1 block text-xs font-bold text-gray-700">
-                      Category
+                      {t("category")}
                     </label>
                     <select
                       value={form.categoryId}
@@ -432,7 +433,7 @@ export function MenuManagementClient({ categories }: Props) {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="mb-1 block text-xs font-bold text-gray-700">
-                        Name (Arabic)
+                        {t("nameArabic")}
                       </label>
                       <input
                         required
@@ -447,7 +448,7 @@ export function MenuManagementClient({ categories }: Props) {
                     </div>
                     <div>
                       <label className="mb-1 block text-xs font-bold text-gray-700">
-                        Name (English)
+                        {t("nameEnglish")}
                       </label>
                       <input
                         required
@@ -464,7 +465,7 @@ export function MenuManagementClient({ categories }: Props) {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="mb-1 block text-xs font-bold text-gray-700">
-                        Description (Arabic)
+                        {t("descArabic")}
                       </label>
                       <textarea
                         required
@@ -479,7 +480,7 @@ export function MenuManagementClient({ categories }: Props) {
                     </div>
                     <div>
                       <label className="mb-1 block text-xs font-bold text-gray-700">
-                        Description (English)
+                        {t("descEnglish")}
                       </label>
                       <textarea
                         required
@@ -496,7 +497,7 @@ export function MenuManagementClient({ categories }: Props) {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="mb-1 block text-xs font-bold text-gray-700">
-                        Price (EGP)
+                        {t("priceEGP")}
                       </label>
                       <input
                         type="number"
@@ -510,7 +511,7 @@ export function MenuManagementClient({ categories }: Props) {
                     </div>
                     <div>
                       <label className="mb-1 block text-xs font-bold text-gray-700">
-                        Badge
+                        {t("badge")}
                       </label>
                       <input
                         type="text"
@@ -518,7 +519,7 @@ export function MenuManagementClient({ categories }: Props) {
                         onChange={(e) =>
                           setForm({ ...form, badge: e.target.value })
                         }
-                        placeholder="e.g. Most popular"
+                        placeholder={t("badgePlaceholder")}
                         className="w-full rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:border-red-300 focus:outline-none focus:ring-2 focus:ring-red-100"
                       />
                     </div>
@@ -526,7 +527,7 @@ export function MenuManagementClient({ categories }: Props) {
 
                   <div>
                     <label className="mb-1 block text-xs font-bold text-gray-700">
-                      Image URL
+                      {t("imageURL")}
                     </label>
                     <input
                       type="url"
@@ -548,7 +549,7 @@ export function MenuManagementClient({ categories }: Props) {
                       }}
                       className="btn-ghost text-sm"
                     >
-                      Cancel
+                      {t("cancel")}
                     </button>
                     <button
                       type="submit"
@@ -558,7 +559,7 @@ export function MenuManagementClient({ categories }: Props) {
                       {pending ? (
                         <Loader2 size={16} className="animate-spin" />
                       ) : null}
-                      {editingId ? "Save Changes" : "Add Item"}
+                      {editingId ? t("saveChanges") : t("addItem")}
                     </button>
                   </div>
                 </form>

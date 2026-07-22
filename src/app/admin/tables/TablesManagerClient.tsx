@@ -22,6 +22,7 @@ import {
   regenerateTableToken,
   generateTables,
 } from "@/lib/actions";
+import { useAdminI18n } from "@/lib/admin-i18n";
 
 type TableWithBranch = {
   id: string;
@@ -81,6 +82,7 @@ export function TablesManagerClient({
   const [batchCount, setBatchCount] = useState("5");
   const [acting, setActing] = useState<string | null>(null);
   const [qrModal, setQrModal] = useState<TableWithBranch | null>(null);
+  const { lang, t } = useAdminI18n();
 
   const filtered = tables.filter((t) => t.branchId === selectedBranch);
   const activeBranch = branches.find((b) => b.id === selectedBranch);
@@ -240,20 +242,20 @@ export function TablesManagerClient({
     return (
       <div className="rounded-2xl border border-dashed border-gray-300 py-16 text-center">
         <p className="text-base font-bold text-gray-400">
-          No branches exist yet. Create a branch first before managing tables.
+          {t("noBranches")}
         </p>
         <a
           href="/admin/branches"
           className="btn-primary mt-4 inline-flex text-sm"
         >
-          Go to Branches
+          {t("goToBranches")}
         </a>
       </div>
     );
   }
 
   return (
-    <div className="min-h-full">
+    <div dir={lang === "ar" ? "rtl" : "ltr"} className="min-h-full">
       <div className="mx-auto max-w-[1400px] space-y-5">
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-3">
@@ -264,13 +266,13 @@ export function TablesManagerClient({
           >
             {branches.map((b) => (
               <option key={b.id} value={b.id}>
-                {b.nameEn}
+                {lang === "ar" ? b.nameAr : b.nameEn}
               </option>
             ))}
           </select>
 
           <span className="text-sm font-bold text-gray-400">
-            {filtered.length} tables
+            {filtered.length} {t("tables")}
           </span>
 
           <div className="flex-1" />
@@ -281,7 +283,7 @@ export function TablesManagerClient({
             className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-semibold text-gray-600 shadow-sm transition-all hover:bg-gray-50 disabled:opacity-30"
           >
             <Printer size={14} />
-            Print All
+            {t("printAll")}
           </button>
 
           <button
@@ -290,7 +292,7 @@ export function TablesManagerClient({
             className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-xs font-semibold text-gray-600 shadow-sm transition-all hover:bg-gray-50 disabled:opacity-30"
           >
             <Download size={14} />
-            Download PDF
+            {t("downloadPDF")}
           </button>
 
           <button
@@ -301,7 +303,7 @@ export function TablesManagerClient({
             className="btn-primary text-sm"
           >
             <Plus size={16} />
-            Add Table
+            {t("addTable")}
           </button>
         </div>
 
@@ -310,7 +312,7 @@ export function TablesManagerClient({
           <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-black text-gray-900">
-                Add to {activeBranch?.nameEn}
+                {t("addTableName")} {lang === "ar" ? activeBranch?.nameAr : activeBranch?.nameEn}
               </h3>
               <button
                 onClick={() => setShowAdd(false)}
@@ -330,7 +332,7 @@ export function TablesManagerClient({
                     : "bg-gray-50 text-gray-400 hover:text-gray-600"
                 }`}
               >
-                Single Table
+                {t("singleTable")}
               </button>
               <button
                 onClick={() => setAddMode("batch")}
@@ -340,7 +342,7 @@ export function TablesManagerClient({
                     : "bg-gray-50 text-gray-400 hover:text-gray-600"
                 }`}
               >
-                Multiple Tables
+                {t("multipleTables")}
               </button>
             </div>
 
@@ -356,14 +358,14 @@ export function TablesManagerClient({
                   className="w-28 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-base font-bold text-gray-900 placeholder:text-gray-300 focus:border-red-300 focus:ring-2 focus:ring-red-100 outline-none"
                 />
                 <button onClick={handleCreate} className="btn-primary text-sm">
-                  Create
+                  {t("create")}
                 </button>
               </div>
             ) : (
               <div className="flex flex-wrap items-end gap-4">
                 <div>
                   <label className="text-xs font-bold text-gray-500 mb-1 block">
-                    Start from #
+                    {t("startFrom")} #
                   </label>
                   <input
                     type="number"
@@ -376,7 +378,7 @@ export function TablesManagerClient({
                 </div>
                 <div>
                   <label className="text-xs font-bold text-gray-500 mb-1 block">
-                    Count
+                    {t("count")}
                   </label>
                   <input
                     type="number"
@@ -391,7 +393,7 @@ export function TablesManagerClient({
                   onClick={handleBatchGenerate}
                   className="btn-primary text-sm"
                 >
-                  Create {batchCount} Tables
+                  {t("create")} {batchCount} {t("tables")}
                 </button>
               </div>
             )}
@@ -419,18 +421,18 @@ export function TablesManagerClient({
                     </span>
                     {!table.isActive && (
                       <span className="rounded-lg bg-red-100 px-2 py-0.5 text-[10px] font-black text-red-600">
-                        Inactive
+                        {t("inactive")}
                       </span>
                     )}
                   </div>
                   <span className="text-xs text-gray-400 bg-gray-50 rounded-lg px-2 py-1">
-                    {table.orders.length} orders
+                    {table.orders.length} {t("ordersCount")}
                   </span>
                 </div>
 
                 {/* Branch name */}
                 <p className="mt-1.5 text-xs text-gray-400">
-                  {table.branch.nameEn}
+                  {lang === "ar" ? table.branch.nameAr : table.branch.nameEn}
                 </p>
 
                 {/* Actions */}
@@ -494,7 +496,7 @@ export function TablesManagerClient({
 
           {filtered.length === 0 && (
             <p className="col-span-full py-12 text-center text-base text-gray-400">
-              No tables in this branch yet. Use the buttons above to add some.
+              {t("noTablesInBranch")}
             </p>
           )}
         </div>
@@ -511,7 +513,7 @@ export function TablesManagerClient({
             >
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-black text-gray-900">
-                  Table {qrModal.tableNumber}
+                  {t("table")} {qrModal.tableNumber}
                 </h3>
                 <button
                   onClick={() => setQrModal(null)}
@@ -522,7 +524,7 @@ export function TablesManagerClient({
               </div>
 
               <p className="text-sm text-gray-500 mb-4">
-                {qrModal.branch.nameEn}
+                {lang === "ar" ? qrModal.branch.nameAr : qrModal.branch.nameEn}
               </p>
 
               {origin && (
@@ -540,7 +542,7 @@ export function TablesManagerClient({
               <p className="mt-2 break-all font-mono text-xs text-gray-400">
                 {origin
                   ? qrUrl(origin, qrModal.tableNumber, qrModal.qrToken)
-                  : "Loading..."}
+                  : t("loading")}
               </p>
 
               <div className="mt-6 flex gap-3 justify-center">
@@ -549,20 +551,20 @@ export function TablesManagerClient({
                   className="btn-primary text-sm"
                 >
                   <Printer size={14} />
-                  Print
+                  {t("print")}
                 </button>
                 <button
                   onClick={() => handleDownloadPDF(qrModal)}
                   className="btn-primary text-sm"
                 >
                   <Download size={14} />
-                  Download
+                  {t("download")}
                 </button>
                 <button
                   onClick={() => setQrModal(null)}
                   className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-semibold text-gray-600 shadow-sm transition-all hover:bg-gray-50"
                 >
-                  Close
+                  {t("close")}
                 </button>
               </div>
             </div>

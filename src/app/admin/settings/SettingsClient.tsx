@@ -4,6 +4,7 @@ import { useState, useTransition, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Save, Check } from "lucide-react";
 import { updateSystemSetting } from "@/lib/actions";
+import { useAdminI18n } from "@/lib/admin-i18n";
 
 function Toggle({
   checked,
@@ -43,6 +44,7 @@ export function SettingsClient({
   );
   const [saved, setSaved] = useState(false);
   const [pending, startTransition] = useTransition();
+  const { lang, t } = useAdminI18n();
 
   const handleSave = useCallback(() => {
     startTransition(async () => {
@@ -55,10 +57,10 @@ export function SettingsClient({
   }, [liveTracking]);
 
   return (
-    <div className="space-y-8 max-w-2xl">
+    <div className="space-y-8 max-w-2xl" dir={lang === "ar" ? "rtl" : "ltr"}>
       <div>
-        <h1 className="text-2xl font-extrabold text-gray-900">Settings</h1>
-        <p className="text-sm text-gray-500">Configure system preferences</p>
+        <h1 className="text-2xl font-extrabold text-gray-900">{t("settingsTitle")}</h1>
+        <p className="text-sm text-gray-500">{t("configurePreferences")}</p>
       </div>
 
       <div className="space-y-6">
@@ -66,10 +68,10 @@ export function SettingsClient({
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-bold text-gray-900">
-                Live Order Tracking
+                {t("liveTracking")}
               </p>
               <p className="text-xs text-gray-500">
-                Show real-time order status to customers
+                {t("liveTrackingDesc")}
               </p>
             </div>
             <Toggle checked={liveTracking} onChange={setLiveTracking} />
@@ -84,13 +86,13 @@ export function SettingsClient({
       >
         {saved ? (
           <>
-            <Check className="h-4 w-4" /> Saved
+            <Check className="h-4 w-4" /> {t("saved")}
           </>
         ) : pending ? (
-          "Saving..."
+          t("saving")
         ) : (
           <>
-            <Save className="h-4 w-4" /> Save Settings
+            <Save className="h-4 w-4" /> {t("saveSettings")}
           </>
         )}
       </button>

@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Pencil, Trash2, MapPin, Phone, MessageCircle } from "lucide-react";
 import { createBranch, updateBranch, deleteBranch } from "@/lib/actions";
+import { useAdminI18n } from "@/lib/admin-i18n";
 
 type Branch = {
   id: number;
@@ -36,6 +37,7 @@ export function BranchesClient({ branches }: { branches: Branch[] }) {
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [pending, startTransition] = useTransition();
+  const { lang, t } = useAdminI18n();
 
   function openCreate() {
     setForm(emptyForm);
@@ -83,14 +85,14 @@ export function BranchesClient({ branches }: { branches: Branch[] }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" dir={lang === "ar" ? "rtl" : "ltr"}>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-gray-900">Branches</h1>
-          <p className="text-sm text-gray-500">Manage restaurant locations</p>
+          <h1 className="text-2xl font-extrabold text-gray-900">{t("branchesTitle")}</h1>
+          <p className="text-sm text-gray-500">{t("manageLocations")}</p>
         </div>
         <button onClick={openCreate} className="btn-primary text-sm">
-          <Plus className="h-4 w-4" /> New Branch
+          <Plus className="h-4 w-4" /> {t("newBranch")}
         </button>
       </div>
 
@@ -110,8 +112,8 @@ export function BranchesClient({ branches }: { branches: Branch[] }) {
                   <span className="inline-block rounded-lg bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-600">
                     #{branch.number}
                   </span>
-                  <h3 className="mt-2 font-bold text-gray-900">{branch.nameEn}</h3>
-                  <p className="text-sm text-gray-500">{branch.nameAr}</p>
+                  <h3 className="mt-2 font-bold text-gray-900">{lang === "ar" ? branch.nameAr : branch.nameEn}</h3>
+                  <p className="text-sm text-gray-500">{lang === "ar" ? branch.nameEn : branch.nameAr}</p>
                 </div>
                 <div className="flex gap-1.5">
                   <button
@@ -133,7 +135,7 @@ export function BranchesClient({ branches }: { branches: Branch[] }) {
               <div className="space-y-1.5 text-xs text-gray-500">
                 <div className="flex items-center gap-2">
                   <MapPin className="h-3.5 w-3.5 shrink-0" />
-                  <span>{branch.addressEn}</span>
+                  <span>{lang === "ar" ? branch.addressAr : branch.addressEn}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Phone className="h-3.5 w-3.5 shrink-0" />
@@ -167,7 +169,7 @@ export function BranchesClient({ branches }: { branches: Branch[] }) {
             >
               <div className="w-full max-w-lg rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl">
                 <h2 className="mb-4 text-lg font-extrabold text-gray-900">
-                  {editing ? "Edit Branch" : "New Branch"}
+                  {editing ? t("editBranch") : t("newBranch")}
                 </h2>
                 <div className="grid gap-3 sm:grid-cols-2">
                   <input
@@ -221,14 +223,14 @@ export function BranchesClient({ branches }: { branches: Branch[] }) {
                 </div>
                 <div className="mt-5 flex justify-end gap-3">
                   <button onClick={closeModal} className="btn-ghost text-sm">
-                    Cancel
+                    {t("cancel")}
                   </button>
                   <button
                     onClick={handleSave}
                     disabled={pending}
                     className="btn-primary text-sm disabled:opacity-50"
                   >
-                    {pending ? "Saving..." : "Save"}
+                    {pending ? t("saving") : t("saveSettings")}
                   </button>
                 </div>
               </div>

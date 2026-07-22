@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import AdminSidebar from "./AdminSidebar";
 import { UnseenOrdersProvider } from "./UnseenOrdersProvider";
+import AdminShell from "./AdminShell";
 
 export default async function AdminLayout({
   children,
@@ -32,19 +33,21 @@ export default async function AdminLayout({
     soundSetting?.value === true || soundSetting?.value === "true";
 
   return (
-    <UnseenOrdersProvider
-      initialSoundEnabled={soundEnabled}
-      tableBranches={tables.map((t) => ({
-        tableId: t.id,
-        branchName: t.branch.nameEn,
-      }))}
-    >
-      <div className="flex h-screen bg-gray-50 text-gray-900">
-        <AdminSidebar />
-        <main className="flex-1 overflow-y-auto bg-gray-50 p-6 lg:p-8">
-          {children}
-        </main>
-      </div>
-    </UnseenOrdersProvider>
+    <AdminShell>
+      <UnseenOrdersProvider
+        initialSoundEnabled={soundEnabled}
+        tableBranches={tables.map((t) => ({
+          tableId: t.id,
+          branchName: t.branch.nameEn,
+        }))}
+      >
+        <div className="flex h-screen bg-gray-50 text-gray-900">
+          <AdminSidebar />
+          <main className="flex-1 overflow-y-auto bg-gray-50 p-6 lg:p-8">
+            {children}
+          </main>
+        </div>
+      </UnseenOrdersProvider>
+    </AdminShell>
   );
 }
