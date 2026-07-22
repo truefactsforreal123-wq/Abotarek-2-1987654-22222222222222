@@ -39,9 +39,9 @@ export default async function AdminLayout({
         branchName: t.branch.nameEn,
       }))}
     >
-      <div className="flex h-screen bg-ink-950 text-paper">
+      <div className="flex h-screen bg-[#080b19] text-paper">
         <AdminSidebar />
-        <main className="flex-1 overflow-y-auto bg-ink-900 p-6 lg:p-8">
+        <main className="flex-1 overflow-y-auto bg-gradient-to-br from-[#0c1021] via-[#0e1225] to-[#0a0e1a] p-6 lg:p-8">
           {children}
         </main>
       </div>

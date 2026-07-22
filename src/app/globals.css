@@ -282,24 +282,23 @@ a {
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1.25rem;
-  border-radius: 0.5rem;
-  background-color: var(--color-tomato-600);
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, var(--color-ember) 0%, var(--color-ember-dark) 100%);
   color: var(--color-paper);
   font-weight: 800;
   font-size: 0.875rem;
-  transition: all 0.15s;
-  box-shadow: 0 3px 0 0 var(--color-tomato-700);
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 14px -3px rgba(229, 50, 34, 0.4), inset 0 1px 0 rgba(255,255,255,0.1);
   cursor: pointer;
   border: none;
 }
 .btn-primary:hover {
-  background-color: var(--color-tomato-500);
-  transform: translateY(-1px);
-  box-shadow: 0 5px 0 0 var(--color-tomato-700);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -4px rgba(229, 50, 34, 0.5), inset 0 1px 0 rgba(255,255,255,0.1);
 }
 .btn-primary:active {
-  transform: translateY(1px);
-  box-shadow: 0 1px 0 0 var(--color-tomato-700);
+  transform: translateY(0px);
+  box-shadow: 0 2px 8px -2px rgba(229, 50, 34, 0.3);
 }
 
 .btn-ghost {
@@ -307,19 +306,21 @@ a {
   align-items: center;
   gap: 0.5rem;
   padding: 0.625rem 1.25rem;
-  border-radius: 0.5rem;
-  background: transparent;
+  border-radius: 0.75rem;
+  background: rgba(255,255,255,0.03);
   color: var(--color-paper);
   font-weight: 700;
   font-size: 0.875rem;
-  transition: all 0.15s;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
   cursor: pointer;
-  border: 1px solid transparent;
+  border: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: blur(8px);
 }
 .btn-ghost:hover {
-  background-color: var(--color-ink-800);
-  border-color: var(--color-ink-700);
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.12);
   color: var(--color-paper);
+  transform: translateY(-1px);
 }
 
 /* brand CTA button for ordering page */

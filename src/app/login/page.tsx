@@ -37,41 +37,51 @@ export default function AdminLoginPage() {
   return (
     <div className="flex min-h-screen">
       {/* Left — login form */}
-      <div className="flex flex-1 items-center justify-center bg-ink-900 px-6">
+      <div className="flex flex-1 items-center justify-center bg-gradient-to-br from-[#0c1021] via-[#0e1225] to-[#0a0e1a] px-6">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="w-full max-w-md"
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full max-w-[380px]"
         >
-          <h1 className="mb-2 text-2xl font-extrabold text-paper">
-            Admin Login
+          <div className="mb-8 flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-ember to-ember-dark text-sm font-black text-paper shadow-lg shadow-ember/20">
+              AT
+            </div>
+            <div>
+              <span className="block text-base font-extrabold text-paper">أبو طارق</span>
+              <span className="text-[11px] text-paper/30 font-medium">Admin Panel</span>
+            </div>
+          </div>
+
+          <h1 className="mb-2 text-xl font-extrabold text-paper tracking-tight">
+            Sign in
           </h1>
-          <p className="mb-8 text-sm text-paper/40">
-            Sign in to manage your restaurant.
+          <p className="mb-8 text-sm text-paper/35">
+            Enter your credentials to access the dashboard.
           </p>
 
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 flex items-center gap-2 rounded-lg border border-tomato-500/30 bg-tomato-500/10 px-4 py-3 text-sm text-tomato-500"
+              className="mb-5 flex items-center gap-2 rounded-xl border border-ember/20 bg-ember/10 px-4 py-3 text-sm text-ember"
             >
               <AlertCircle className="h-4 w-4 shrink-0" />
               {error}
             </motion.div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label
                 htmlFor="email"
-                className="mb-1.5 block text-sm font-semibold text-paper/60"
+                className="mb-1.5 block text-xs font-semibold text-paper/40 uppercase tracking-wider"
               >
                 Email
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-paper/30" />
+                <Mail className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-paper/20" />
                 <input
                   id="email"
                   type="email"
@@ -79,7 +89,7 @@ export default function AdminLoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@abotarek.com"
-                  className="w-full rounded-lg border border-ink-700 bg-ink-800 py-2.5 pl-10 pr-4 text-sm text-paper placeholder-paper/30 outline-none transition-colors focus:border-cobalt-500 focus:ring-1 focus:ring-cobalt-500/30"
+                  className="w-full rounded-xl border border-white/[0.08] bg-white/[0.04] py-3 pl-11 pr-4 text-sm text-paper placeholder-paper/20 outline-none transition-all focus:border-ember/40 focus:bg-white/[0.06] focus:ring-1 focus:ring-ember/20"
                 />
               </div>
             </div>
@@ -87,12 +97,12 @@ export default function AdminLoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="mb-1.5 block text-sm font-semibold text-paper/60"
+                className="mb-1.5 block text-xs font-semibold text-paper/40 uppercase tracking-wider"
               >
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-paper/30" />
+                <Lock className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-paper/20" />
                 <input
                   id="password"
                   type="password"
@@ -100,7 +110,7 @@ export default function AdminLoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full rounded-lg border border-ink-700 bg-ink-800 py-2.5 pl-10 pr-4 text-sm text-paper placeholder-paper/30 outline-none transition-colors focus:border-cobalt-500 focus:ring-1 focus:ring-cobalt-500/30"
+                  className="w-full rounded-xl border border-white/[0.08] bg-white/[0.04] py-3 pl-11 pr-4 text-sm text-paper placeholder-paper/20 outline-none transition-all focus:border-ember/40 focus:bg-white/[0.06] focus:ring-1 focus:ring-ember/20"
                 />
               </div>
             </div>
@@ -108,7 +118,7 @@ export default function AdminLoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full justify-center disabled:cursor-not-allowed disabled:opacity-50"
+              className="btn-primary w-full justify-center mt-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {loading ? (
                 <span className="flex items-center gap-2">
@@ -126,7 +136,7 @@ export default function AdminLoginPage() {
 
           <Link
             href="/"
-            className="mt-8 flex items-center justify-center gap-2 text-sm font-semibold text-paper/40 transition-colors hover:text-paper/70"
+            className="mt-8 flex items-center justify-center gap-2 text-sm font-semibold text-paper/25 transition-colors hover:text-paper/50"
           >
             ← Back to site
           </Link>
@@ -140,6 +150,7 @@ export default function AdminLoginPage() {
           alt="Abo Tarek Founder"
           className="absolute inset-0 h-full w-full object-cover"
         />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0c1021]/80 via-transparent to-transparent" />
       </div>
     </div>
   );
