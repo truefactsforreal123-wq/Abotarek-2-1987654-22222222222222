@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: "%s | أبو طارق — Abo Tarek",
   },
   description:
-    "كشري أبو طارق — الأصل منذ 1950. فرع واحد فقط في شارع شامبليون، وسط البلد، القاهرة. The original Abo Tarek Koshari since 1950 — one branch only, Downtown Cairo.",
+    "كشري أبو طارق — الأصل منذ 1950. فرع واحد فقط في شارع شامبليون، وسط البلد، القاهرة. The original Abo Tarek Koshari since 1950.",
   icons: { icon: "/images/logo.png" },
 };
 

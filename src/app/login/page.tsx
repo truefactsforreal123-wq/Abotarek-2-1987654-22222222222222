@@ -36,43 +36,13 @@ export default function AdminLoginPage() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Left — brand panel */}
-      <div className="relative hidden w-1/2 items-center justify-center bg-ink-950 lg:flex overflow-hidden">
-        <img
-          src="/images/founder.jpg"
-          alt="Abo Tarek Founder"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink-950 via-ink-950/60 to-transparent" />
-        <div className="relative z-10 flex flex-col items-center gap-4 px-12 text-center mt-auto pb-16">
-          <h2 className="text-3xl font-extrabold text-paper drop-shadow-lg">
-            أبو طارق — ملك الكشري
-          </h2>
-          <p className="max-w-sm text-base leading-relaxed text-paper/70 drop-shadow">
-            The original Abo Tarek Koshari since 1950 — one branch only,
-            Downtown Cairo.
-          </p>
-          <div className="mt-4 rounded-xl border border-paper/20 bg-black/40 backdrop-blur-sm px-6 py-4">
-            <p className="text-sm italic text-paper/70">
-              &ldquo;الكشري مش بس أكل… ده ثقافة&rdquo;
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Right — login form with founder image background */}
-      <div className="relative flex flex-1 items-center justify-center px-6 overflow-hidden">
-        <img
-          src="/images/founder.jpg"
-          alt="Abo Tarek Founder"
-          className="absolute inset-0 h-full w-full object-cover"
-        />
-        <div className="absolute inset-0 bg-ink-950/70" />
+      {/* Left — login form */}
+      <div className="flex flex-1 items-center justify-center bg-ink-900 px-6">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="relative z-10 w-full max-w-md"
+          className="w-full max-w-md"
         >
           <h1 className="mb-2 text-2xl font-extrabold text-paper">
             Admin Login
@@ -161,6 +131,15 @@ export default function AdminLoginPage() {
             ← Back to site
           </Link>
         </motion.div>
+      </div>
+
+      {/* Right — founder image */}
+      <div className="relative hidden w-1/2 overflow-hidden lg:block">
+        <img
+          src="/images/founder.jpg"
+          alt="Abo Tarek Founder"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import { getBranch, getSiteContent } from "@/lib/queries";
 export const metadata: Metadata = {
   title: "الرئيسية — ملك الكشري منذ 1950",
   description:
-    "أبو طارق — الأصل منذ 1950. أشهر عنوان كشري في مصر: شارع شامبليون، وسط البلد، القاهرة. Abo Tarek, King of Koshari — one branch only, Downtown Cairo.",
+    "أبو طارق — الأصل منذ 1950. أشهر عنوان كشري في مصر: شارع شامبليون، وسط البلد، القاهرة. Abo Tarek, King of Koshari.",
 };
 
 export default async function HomePage() {
